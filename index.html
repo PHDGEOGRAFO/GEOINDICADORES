@@ -3,93 +3,54 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Visor territorial GeoIndicadores de Santiago">
+  <meta name="description" content="GeoIndicadores: visor territorial de la comuna de Santiago">
   <title>GeoIndicadores | Visor territorial</title>
-  <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <p class="eyebrow">Municipalidad de Santiago · prototipo 0.1</p>
-      <h1>GeoIndicadores</h1>
-    </div>
-    <div class="updated"><span>Actualización</span><strong id="updatedAt">Datos demostrativos</strong></div>
+    <div><p class="eyebrow">Municipalidad de Santiago · prototipo 0.2</p><h1>GeoIndicadores</h1></div>
+    <div class="top-actions"><span id="sourceStatus">Cargando base…</span><button id="methodButton">ⓘ Ficha del indicador</button><button id="reportButton">▤ Reporte comparativo</button></div>
   </header>
 
   <main class="dashboard">
-    <aside class="sidebar" aria-label="Controles del visor">
-      <section class="panel intro">
-        <h2>Visor territorial</h2>
-        <p>Explora indicadores por barrio y territorio. La versión 0.1 utiliza datos demostrativos.</p>
+    <aside class="sidebar">
+      <section class="panel controls">
+        <h2>Consulta territorial</h2>
+        <label>Escala<select id="scaleSelect"><option value="manzana">Manzana</option><option value="barrio" selected>Barrio</option><option value="territorio">Territorio</option><option value="comuna">Comuna</option></select></label>
+        <div class="two-cols"><label>Año<select id="yearSelect"><option>2025</option><option selected>2026</option></select></label><label>Comparar con<select id="compareYearSelect"><option>2025</option><option>2026</option></select></label></div>
+        <label>Dimensión<select id="dimensionSelect"><option value="all">Todas</option><option value="IAT">Ambiental</option><option value="IUT">Urbana</option><option value="IST">Sociocultural</option><option value="IET">Económica</option><option value="IIT">Institucional</option></select></label>
+        <div class="indicator-head"><span>Indicadores</span><button id="clearIndicators" class="link-button">Limpiar</button></div>
+        <div id="indicatorList" class="indicator-list"></div>
+        <p id="groupFormula" class="note">Seleccione uno o varios indicadores.</p>
       </section>
 
-      <section class="panel filters">
-        <h2>Filtros</h2>
-        <label>Escala
-          <select id="scaleSelect">
-            <option value="barrio">Barrio</option>
-            <option value="territorio">Territorio</option>
-            <option value="manzana" disabled>Manzana (próxima versión)</option>
-            <option value="comuna" disabled>Comuna (próxima versión)</option>
-          </select>
-        </label>
-        <label>Territorio
-          <select id="territorySelect"><option value="all">Todos</option></select>
-        </label>
-        <label>Indicador
-          <select id="indicatorSelect">
-            <option value="valor">Áreas verdes por habitante</option>
-          </select>
-        </label>
-        <label>Método
-          <select id="methodSelect">
-            <option value="minmax">Min–max</option>
-            <option value="percentile">Percentil</option>
-          </select>
-        </label>
-        <label class="check"><input type="checkbox" id="inverseCheck"> Valoración inversa</label>
-        <button id="resetButton" type="button">Restablecer filtros</button>
-      </section>
-
-      <section class="panel legend" aria-labelledby="legendTitle">
-        <h2 id="legendTitle">Valoración</h2>
-        <div id="legendItems"></div>
-      </section>
-
-      <details class="panel methodology">
-        <summary>Metodología</summary>
-        <p><strong>Indicador:</strong> superficie de áreas verdes dividida por habitantes.</p>
-        <p><strong>Normalización:</strong> seleccionable entre min–max y percentil.</p>
-        <p><strong>Advertencia:</strong> información demostrativa; no usar para decisiones oficiales.</p>
-      </details>
+      <section class="panel legend"><h2>Valoración</h2><div id="legendItems"></div><p class="note">Los rangos se aplican al indicador activo o al promedio de los indicadores seleccionados.</p></section>
     </aside>
 
     <section class="workspace">
-      <div class="cards" aria-label="Resumen">
-        <article class="card"><span>Unidades visibles</span><strong id="unitCount">–</strong></article>
-        <article class="card"><span>Promedio</span><strong id="averageValue">–</strong><small>m²/hab</small></article>
-        <article class="card"><span>Valor máximo</span><strong id="maxValue">–</strong><small>m²/hab</small></article>
-        <article class="card accent"><span>Rango predominante</span><strong id="mainRange">–</strong></article>
+      <div class="cards">
+        <article class="card"><span id="valueLabel">Valor seleccionado</span><strong id="selectedValue">–</strong><small id="selectedName">Seleccione una unidad</small></article>
+        <article class="card"><span>Promedio de la escala</span><strong id="scaleAverage">–</strong><small id="validCount">Sin cálculo</small></article>
+        <article class="card"><span>Posición</span><strong id="rankValue">–</strong><small id="rankDetail">Dentro de la escala</small></article>
+        <article class="card accent"><span>Rango</span><strong id="rangeValue">–</strong><small id="changeValue">Variación anual: –</small></article>
       </div>
 
-      <div class="visual-grid">
-        <section class="map-panel">
-          <div id="map" aria-label="Mapa territorial interactivo"></div>
-          <div id="mapStatus" class="map-status">Cargando mapa…</div>
-        </section>
-        <section class="ranking-panel">
-          <div class="section-heading">
-            <div><span>Comparación</span><h2>Barrios destacados</h2></div>
-            <span id="rankingUnit">m²/hab</span>
-          </div>
-          <div id="ranking" class="ranking"></div>
+      <div class="main-grid">
+        <section class="map-panel"><div id="map"></div><div id="mapStatus" class="map-status">Cargando cartografía…</div></section>
+        <section class="chart-panel">
+          <nav class="tabs" aria-label="Gráficos"><button data-view="ranking" class="active">Ranking</button><button data-view="ranges">Rangos</button><button data-view="trend">Evolución</button><button data-view="hierarchy">Jerarquía</button></nav>
+          <div id="chartTitle" class="chart-title">Ranking territorial</div>
+          <div id="chart" class="chart"></div>
         </section>
       </div>
+
+      <section class="context-strip"><div><span>Unidad seleccionada</span><strong id="contextUnit">–</strong></div><div id="hierarchyValues" class="hierarchy-values"></div></section>
     </section>
   </main>
 
+  <dialog id="infoDialog"><button class="close-dialog">×</button><div id="dialogContent"></div></dialog>
   <script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
   <script src="app.js"></script>
 </body>
