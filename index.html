@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Visor territorial GeoIndicadores de Santiago">
+  <title>GeoIndicadores | Visor territorial</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Municipalidad de Santiago · prototipo 0.1</p>
+      <h1>GeoIndicadores</h1>
+    </div>
+    <div class="updated"><span>Actualización</span><strong id="updatedAt">Datos demostrativos</strong></div>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar" aria-label="Controles del visor">
+      <section class="panel intro">
+        <h2>Visor territorial</h2>
+        <p>Explora indicadores por barrio y territorio. La versión 0.1 utiliza datos demostrativos.</p>
+      </section>
+
+      <section class="panel filters">
+        <h2>Filtros</h2>
+        <label>Escala
+          <select id="scaleSelect">
+            <option value="barrio">Barrio</option>
+            <option value="territorio">Territorio</option>
+            <option value="manzana" disabled>Manzana (próxima versión)</option>
+            <option value="comuna" disabled>Comuna (próxima versión)</option>
+          </select>
+        </label>
+        <label>Territorio
+          <select id="territorySelect"><option value="all">Todos</option></select>
+        </label>
+        <label>Indicador
+          <select id="indicatorSelect">
+            <option value="valor">Áreas verdes por habitante</option>
+          </select>
+        </label>
+        <label>Método
+          <select id="methodSelect">
+            <option value="minmax">Min–max</option>
+            <option value="percentile">Percentil</option>
+          </select>
+        </label>
+        <label class="check"><input type="checkbox" id="inverseCheck"> Valoración inversa</label>
+        <button id="resetButton" type="button">Restablecer filtros</button>
+      </section>
+
+      <section class="panel legend" aria-labelledby="legendTitle">
+        <h2 id="legendTitle">Valoración</h2>
+        <div id="legendItems"></div>
+      </section>
+
+      <details class="panel methodology">
+        <summary>Metodología</summary>
+        <p><strong>Indicador:</strong> superficie de áreas verdes dividida por habitantes.</p>
+        <p><strong>Normalización:</strong> seleccionable entre min–max y percentil.</p>
+        <p><strong>Advertencia:</strong> información demostrativa; no usar para decisiones oficiales.</p>
+      </details>
+    </aside>
+
+    <section class="workspace">
+      <div class="cards" aria-label="Resumen">
+        <article class="card"><span>Unidades visibles</span><strong id="unitCount">–</strong></article>
+        <article class="card"><span>Promedio</span><strong id="averageValue">–</strong><small>m²/hab</small></article>
+        <article class="card"><span>Valor máximo</span><strong id="maxValue">–</strong><small>m²/hab</small></article>
+        <article class="card accent"><span>Rango predominante</span><strong id="mainRange">–</strong></article>
+      </div>
+
+      <div class="visual-grid">
+        <section class="map-panel">
+          <div id="map" aria-label="Mapa territorial interactivo"></div>
+          <div id="mapStatus" class="map-status">Cargando mapa…</div>
+        </section>
+        <section class="ranking-panel">
+          <div class="section-heading">
+            <div><span>Comparación</span><h2>Barrios destacados</h2></div>
+            <span id="rankingUnit">m²/hab</span>
+          </div>
+          <div id="ranking" class="ranking"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
