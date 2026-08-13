@@ -6,11 +6,12 @@
   <meta name="description" content="GeoIndicadores: visor territorial de la comuna de Santiago">
   <title>GeoIndicadores | Visor territorial</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="styles.css?v=0.2.2">
+  <link rel="stylesheet" href="styles.css?v=0.3.0">
+  <link rel="stylesheet" href="overrides.css?v=0.3.0">
 </head>
 <body>
   <header class="topbar">
-    <div><p class="eyebrow">Municipalidad de Santiago · prototipo 0.2</p><h1>GeoIndicadores</h1></div>
+    <div><p class="eyebrow">Municipalidad de Santiago · prototipo 0.3</p><h1>GeoIndicadores</h1></div>
     <div class="top-actions"><span id="sourceStatus">Cargando base…</span><button id="methodButton">ⓘ Ficha del indicador</button><button id="reportButton">▤ Reporte comparativo</button></div>
   </header>
 
@@ -18,9 +19,9 @@
     <aside class="sidebar">
       <section class="panel controls">
         <h2>Consulta territorial</h2>
-        <label>Escala<select id="scaleSelect"><option value="manzana">Manzana</option><option value="barrio" selected>Barrio</option><option value="territorio">Territorio</option><option value="comuna">Comuna</option></select></label>
-        <div class="two-cols"><label>Año<select id="yearSelect"><option>2025</option><option selected>2026</option></select></label><label>Comparar con<select id="compareYearSelect"><option>2025</option><option>2026</option></select></label></div>
-        <label>Dimensión<select id="dimensionSelect"><option value="all">Todas</option><option value="IAT">Ambiental</option><option value="IUT">Urbana</option><option value="IST">Sociocultural</option><option value="IET">Económica</option><option value="IIT">Institucional</option></select></label>
+        <label>Escala<select id="scaleSelect"><option value="manzana" disabled>Manzana (temporalmente sin datos completos)</option><option value="barrio" selected>Barrio</option><option value="territorio">Territorio</option><option value="comuna">Comuna</option></select></label>
+        <div class="two-cols"><label>Año<select id="yearSelect"><option>2025</option><option selected>2026</option></select></label><label>Comparar con<select id="compareYearSelect"><option value="none">Ninguno</option><option value="2025" selected>2025</option><option value="2026">2026</option></select></label></div>
+        <fieldset class="dimension-field"><legend>Dimensiones (selección múltiple)</legend><div id="dimensionList" class="dimension-list"><label><input type="checkbox" value="IAT" checked>Ambiental</label><label><input type="checkbox" value="IUT" checked>Urbana</label><label><input type="checkbox" value="IST" checked>Sociocultural</label><label><input type="checkbox" value="IET" checked>Económica</label><label><input type="checkbox" value="IIT" checked>Institucional</label></div></fieldset>
         <div class="indicator-head"><span>Indicadores</span><button id="clearIndicators" class="link-button">Limpiar</button></div>
         <div id="indicatorList" class="indicator-list"></div>
         <p id="groupFormula" class="note">Seleccione uno o varios indicadores.</p>
@@ -40,7 +41,7 @@
       <div class="main-grid">
         <section class="map-panel"><div id="map"></div><div id="mapStatus" class="map-status">Cargando cartografía…</div></section>
         <section class="chart-panel">
-          <nav class="tabs" aria-label="Gráficos"><button data-view="ranking" class="active">Ranking</button><button data-view="ranges">Rangos</button><button data-view="trend">Evolución</button><button data-view="hierarchy">Jerarquía</button></nav>
+          <nav class="tabs" aria-label="Gráficos"><button data-view="ranking" class="active">Ranking</button><button data-view="ranges">Rangos</button><button data-view="trend">Evolución</button></nav>
           <div id="chartTitle" class="chart-title">Ranking territorial</div>
           <div id="chart" class="chart"></div>
         </section>
@@ -50,8 +51,9 @@
     </section>
   </main>
 
-  <dialog id="infoDialog"><button class="close-dialog">×</button><div id="dialogContent"></div></dialog>
+  <dialog id="infoDialog"><button class="close-dialog" aria-label="Cerrar">×</button><div id="dialogContent"></div><div class="dialog-actions"><button id="printDialog">Imprimir</button><button id="pdfDialog">Descargar PDF</button></div></dialog>
   <script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
-  <script src="app.js?v=0.2.2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js?v=0.3.0"></script>
 </body>
 </html>
