@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="GeoIndicadores: visor territorial de la comuna de Santiago">
-  <title>GeoIndicadores | Visor territorial</title>
+  <meta name="description" content="GeoIndicadores PLADECO 2024–2034: visor territorial de la comuna de Santiago">
+  <title>GeoIndicadores PLADECO 2024–2034</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
   <link rel="stylesheet" href="styles.css?v=0.3.0">
-  <link rel="stylesheet" href="overrides.css?v=0.3.0">
+  <link rel="stylesheet" href="overrides.css?v=0.4.0">
+  <style>.card-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}.code-tags{display:flex!important;gap:4px;flex-wrap:wrap;justify-content:flex-end}.code-tags b{color:#dffcff;background:#15516a;border:1px solid #20c6c7;border-radius:5px;padding:2px 5px;font-size:.62rem}.range-columns{display:grid;grid-template-columns:1fr auto;gap:8px;margin:10px 0 4px;padding-bottom:6px;border-bottom:1px solid #22415d;color:#91aac0;font-size:.66rem}.range-summary{margin-top:14px}</style>
 </head>
 <body>
   <header class="topbar">
-    <div><p class="eyebrow">Municipalidad de Santiago · prototipo 0.3</p><h1>GeoIndicadores</h1></div>
+    <div><p class="eyebrow">Municipalidad de Santiago · prototipo 0.4</p><h1>GeoIndicadores PLADECO 2024–2034</h1></div>
     <div class="top-actions"><span id="sourceStatus">Cargando base…</span><button id="methodButton">ⓘ Ficha del indicador</button><button id="reportButton">▤ Reporte comparativo</button></div>
   </header>
 
@@ -32,8 +33,8 @@
 
     <section class="workspace">
       <div class="cards">
-        <article class="card"><span id="valueLabel">Valor seleccionado</span><strong id="selectedValue">–</strong><small id="selectedName">Seleccione una unidad</small></article>
-        <article class="card"><span>Promedio de la escala</span><strong id="scaleAverage">–</strong><small id="validCount">Sin cálculo</small></article>
+        <article class="card"><div class="card-heading"><span id="valueLabel">Valor seleccionado</span><span id="indicatorCodes" class="code-tags"></span></div><strong id="selectedValue">–</strong><small id="selectedName">Haz clic en una unidad del mapa</small></article>
+        <article class="card"><span id="averageLabel">Promedio de barrios con datos</span><strong id="scaleAverage">–</strong><small id="validCount">Sin cálculo</small></article>
         <article class="card"><span>Posición</span><strong id="rankValue">–</strong><small id="rankDetail">Dentro de la escala</small></article>
         <article class="card accent"><span>Rango</span><strong id="rangeValue">–</strong><small id="changeValue">Variación anual: –</small></article>
       </div>
@@ -54,6 +55,6 @@
   <dialog id="infoDialog"><button class="close-dialog" aria-label="Cerrar">×</button><div id="dialogContent"></div><div class="dialog-actions"><button id="printDialog">Imprimir</button><button id="pdfDialog">Descargar PDF</button></div></dialog>
   <script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="app.js?v=0.3.0"></script>
+  <script src="app.js?v=0.4.0"></script>
 </body>
 </html>
