@@ -3,7 +3,7 @@ const palette=[{name:'Muy bajo',label:'0–<12,5',color:'#285784'},{name:'Bajo',
 const layerFiles={manzana:['manzanas/NORPONIENTE.geojson','manzanas/SURPONIENTE.geojson','manzanas/NORORIENTE.geojson','manzanas/CENTRO_ORIENTE.geojson','manzanas/CENTRO_PONIENTE.geojson','manzanas/SURORIENTE.geojson'],barrio:['barrios.geojson'],territorio:['territorios.geojson'],comuna:['comuna.geojson']};
 const levelFields={manzana:'COD_MZN',barrio:'BARRIO',territorio:'TERRITORIO',comuna:'COMUNA'};
 const inverseCodes=new Set(['IAT_1','IAT_7','IUT_3','IUT_7']);
-const state={db:null,layers:{},scale:'barrio',year:2026,compareYear:null,selectedDimensions:['IAT','IUT','IST','IET','IIT'],selectedIndicators:[],selectedFeature:null,view:'ranking'};
+const state={db:null,layers:{},scale:'barrio',year:2025,compareYear:null,selectedDimensions:['IAT','IUT','IST','IET','IIT'],selectedIndicators:[],selectedFeature:null,view:'ranking'};
 let map;
 const norm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 const fmt=v=>Number.isFinite(v)?v.toLocaleString('es-CL',{minimumFractionDigits:2,maximumFractionDigits:2}):'–';
