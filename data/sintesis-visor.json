@@ -744,7 +744,7 @@
     },
     {
       "id": "14",
-      "nombre": "BARRIO UNIVERSITARIO",
+      "nombre": "REPÚBLICA",
       "anio": 2025,
       "valores": {
         "IAT_1": 0.782608695652174,
@@ -1212,7 +1212,7 @@
     },
     {
       "id": "26",
-      "nombre": "BARRIO JUDICIAL",
+      "nombre": "RONDIZZONI",
       "anio": 2025,
       "valores": {
         "IAT_1": 0.8695652173913043,
@@ -1797,7 +1797,7 @@
     },
     {
       "id": "14",
-      "nombre": "BARRIO UNIVERSITARIO",
+      "nombre": "REPÚBLICA",
       "anio": 2026,
       "valores": {
         "IAT_1": 0.9908612402035645,
@@ -2265,7 +2265,7 @@
     },
     {
       "id": "26",
-      "nombre": "BARRIO JUDICIAL",
+      "nombre": "RONDIZZONI",
       "anio": 2026,
       "valores": {
         "IAT_1": 0.9942101839055053,
