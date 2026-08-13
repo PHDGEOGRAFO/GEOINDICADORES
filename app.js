@@ -1,160 +1,44 @@
 const $=id=>document.getElementById(id);
-const palette=[
-  {name:'Muy bajo',min:0,max:.249999,color:'#285784'},
-  {name:'Bajo',min:.25,max:.499999,color:'#49a9a7'},
-  {name:'Medio',min:.5,max:.749999,color:'#d4aa3d'},
-  {name:'Alto',min:.75,max:1,color:'#e96c57'}
-];
-const layerFiles={
-  manzana:['manzanas/NORPONIENTE.geojson','manzanas/SURPONIENTE.geojson','manzanas/NORORIENTE.geojson','manzanas/CENTRO_ORIENTE.geojson','manzanas/CENTRO_PONIENTE.geojson','manzanas/SURORIENTE.geojson'],
-  barrio:['barrios.geojson'],territorio:['territorios.geojson'],comuna:['comuna.geojson']
-};
+const palette=[{name:'Muy bajo',label:'0–<12,5',color:'#285784'},{name:'Bajo',label:'12,5–37,5',color:'#49a9a7'},{name:'Medio',label:'>37,5–<75',color:'#d4aa3d'},{name:'Alto',label:'75–100',color:'#e96c57'}];
+const layerFiles={manzana:['manzanas/NORPONIENTE.geojson','manzanas/SURPONIENTE.geojson','manzanas/NORORIENTE.geojson','manzanas/CENTRO_ORIENTE.geojson','manzanas/CENTRO_PONIENTE.geojson','manzanas/SURORIENTE.geojson'],barrio:['barrios.geojson'],territorio:['territorios.geojson'],comuna:['comuna.geojson']};
 const levelFields={manzana:'COD_MZN',barrio:'BARRIO',territorio:'TERRITORIO',comuna:'COMUNA'};
-const state={db:null,layers:{},scale:'barrio',year:2026,compareYear:2025,selectedIndicators:[],selectedFeature:null,view:'ranking'};
+const inverseCodes=new Set(['IAT_1','IAT_7','IUT_3','IUT_7']);
+const state={db:null,layers:{},scale:'barrio',year:2026,compareYear:2025,selectedDimensions:['IAT','IUT','IST','IET','IIT'],selectedIndicators:[],selectedFeature:null,view:'ranking'};
 let map;
-
 const norm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 const fmt=v=>Number.isFinite(v)?v.toLocaleString('es-CL',{minimumFractionDigits:2,maximumFractionDigits:2}):'–';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const indicatorByCode=code=>state.db.indicadores.find(i=>i.codigo===code);
-const rangeFor=v=>Number.isFinite(v)?palette.find(p=>v>=p.min&&v<=p.max)??palette.at(-1):null;
+function rangeFor(v){if(!Number.isFinite(v))return null;if(v<.125)return palette[0];if(v<=.375)return palette[1];if(v<.75)return palette[2];return palette[3]}
 const rowFor=(name,year)=>state.db.series.find(r=>r.anio===year&&norm(r.nombre)===norm(name));
-
-function publishable(code,year){
-  const m=indicatorByCode(code);
-  return Boolean(m?.[`publicado_${year}`]);
-}
-function codesAvailable(){
-  const prefixes=$('dimensionSelect').value;
-  return state.db.indicadores.filter(i=>(prefixes==='all'||i.codigo.startsWith(prefixes))&&(publishable(i.codigo,state.year)||publishable(i.codigo,state.compareYear)));
-}
-function barrioValue(name,year){
-  const row=rowFor(name,year),vals=state.selectedIndicators.map(c=>publishable(c,year)?Number(row?.valores?.[c]):NaN).filter(Number.isFinite);
-  return vals.length===state.selectedIndicators.length&&vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
-}
-function featureValue(feature,scale=state.scale,year=state.year){
-  if(!state.selectedIndicators.length)return null;
-  if(scale==='barrio')return barrioValue(feature.properties.BARRIO,year);
-  if(scale==='manzana')return null;
-  const barrios=state.layers.barrio.features.filter(b=>scale==='comuna'||norm(b.properties.TERRITORIO)===norm(feature.properties.TERRITORIO));
-  const vals=barrios.map(b=>barrioValue(b.properties.BARRIO,year)).filter(Number.isFinite);
-  return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
-}
-function currentFeatures(){return state.layers[state.scale]?.features??[]}
-function computedFeatures(){return currentFeatures().map(f=>({...f,properties:{...f.properties,GI_VAL:featureValue(f),GI_RANGO:rangeFor(featureValue(f))?.name??'Sin datos'}}))}
-
-function renderIndicators(){
-  const options=codesAvailable();
-  state.selectedIndicators=state.selectedIndicators.filter(c=>options.some(i=>i.codigo===c));
-  if(!state.selectedIndicators.length&&options.length)state.selectedIndicators=[options[0].codigo];
-  $('indicatorList').innerHTML=options.map(i=>`<label class="indicator-option"><input type="checkbox" value="${i.codigo}" ${state.selectedIndicators.includes(i.codigo)?'checked':''}><span><b>${i.codigo}</b> · ${i.indicador}<small>${i.unidad??'Unidad no especificada'}</small></span></label>`).join('')||'<p class="note">No hay indicadores publicables en esta dimensión.</p>';
-  $('indicatorList').querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{
-    state.selectedIndicators=[...$('indicatorList').querySelectorAll('input:checked')].map(x=>x.value);
-    refresh();
-  }));
-  renderFormula();
-}
-function renderFormula(){
-  const n=state.selectedIndicators.length;
-  $('groupFormula').textContent=n>1?`Resultado agrupado: promedio simple de ${n} indicadores normalizados.`:n===1?'Resultado individual normalizado.':'Seleccione uno o varios indicadores.';
-  $('valueLabel').textContent=n>1?'Promedio agrupado':'Valor normalizado';
-}
-function renderLegend(){$('legendItems').innerHTML=palette.map(p=>`<div class="legend-row"><i class="swatch" style="background:${p.color}"></i><span>${p.name}</span><b>${p.min.toFixed(2)}–${p.max.toFixed(2)}</b></div>`).join('')}
-
-function refreshMap(){
-  const fc={type:'FeatureCollection',features:computedFeatures()};
-  if(!map){$('mapStatus').textContent=`${fc.features.length.toLocaleString('es-CL')} unidades cargadas · mapa no disponible`;return}
-  if(map.getSource('territorial'))map.getSource('territorial').setData(fc);
-  $('mapStatus').textContent=`${fc.features.length.toLocaleString('es-CL')} ${state.scale}${fc.features.length===1?'':'s'} · WGS84`;
-}
-function renderCards(){
-  const features=computedFeatures(),valid=features.map(f=>f.properties.GI_VAL).filter(Number.isFinite),avg=valid.length?valid.reduce((a,b)=>a+b,0)/valid.length:null;
-  const selected=state.selectedFeature?features.find(f=>norm(f.properties[levelFields[state.scale]])===norm(state.selectedFeature.properties[levelFields[state.scale]])):null;
-  const value=selected?.properties.GI_VAL,sorted=[...valid].sort((a,b)=>b-a),rank=Number.isFinite(value)?sorted.findIndex(v=>v===value)+1:null;
-  const name=selected?.properties[levelFields[state.scale]]??'Seleccione una unidad';
-  $('selectedValue').textContent=fmt(value);$('selectedName').textContent=name;
-  $('scaleAverage').textContent=fmt(avg);$('validCount').textContent=`${valid.length} de ${features.length} unidades con resultado`;
-  $('rankValue').textContent=rank?`${rank}°`:'–';$('rankDetail').textContent=rank?`de ${valid.length} unidades válidas`:'Dentro de la escala';
-  $('rangeValue').textContent=rangeFor(value)?.name??'Sin datos';
-  const old=selected?featureValue(selected,state.scale,state.compareYear):null;
-  $('changeValue').textContent=Number.isFinite(value)&&Number.isFinite(old)?`Variación ${state.compareYear}–${state.year}: ${value-old>=0?'+':''}${fmt(value-old)}`:'Variación anual: no disponible';
-  $('contextUnit').textContent=name;
-  renderHierarchy(selected);
-}
-function aggregateFor(level,name,year){
-  if(level==='barrio'){const f=state.layers.barrio.features.find(x=>norm(x.properties.BARRIO)===norm(name));return f?featureValue(f,'barrio',year):null}
-  if(level==='territorio'){const f=state.layers.territorio.features.find(x=>norm(x.properties.TERRITORIO)===norm(name));return f?featureValue(f,'territorio',year):null}
-  const f=state.layers.comuna.features[0];return f?featureValue(f,'comuna',year):null;
-}
-function renderHierarchy(feature){
-  if(!feature){$('hierarchyValues').innerHTML='<span class="note">Haz clic en el mapa para ver el contexto jerárquico.</span>';return}
-  const p=feature.properties,items=[];
-  if(state.scale==='manzana')items.push(['Manzana',p.COD_MZN,null]);
-  if(['manzana','barrio'].includes(state.scale))items.push(['Barrio',p.BARRIO,aggregateFor('barrio',p.BARRIO,state.year)]);
-  if(state.scale!=='comuna')items.push(['Territorio',p.TERRITORIO,aggregateFor('territorio',p.TERRITORIO,state.year)]);
-  items.push(['Comuna','SANTIAGO',aggregateFor('comuna','SANTIAGO',state.year)]);
-  $('hierarchyValues').innerHTML=items.map(([level,name,value])=>`<div class="context-pill"><span>${level}</span><strong>${name}</strong><b>${fmt(value)}</b></div>`).join('');
-}
-
-function renderChart(){
-  const title={ranking:'Ranking territorial',ranges:'Distribución por rangos',trend:'Comparación temporal',hierarchy:'Comparación jerárquica'}[state.view];$('chartTitle').textContent=title;
-  ({ranking:renderRanking,ranges:renderRanges,trend:renderTrend,hierarchy:renderHierarchyChart}[state.view])();
-}
-function renderRanking(){
-  const rows=computedFeatures().filter(f=>Number.isFinite(f.properties.GI_VAL)).sort((a,b)=>b.properties.GI_VAL-a.properties.GI_VAL);
-  const shown=state.scale==='manzana'?rows.slice(0,10):rows;
-  $('chart').innerHTML=shown.map((f,i)=>`<div class="bar-row"><span>${i+1}. ${f.properties[levelFields[state.scale]]}</span><b>${fmt(f.properties.GI_VAL)}</b><div class="bar-track"><div class="bar-fill" style="width:${f.properties.GI_VAL*100}%"></div></div></div>`).join('')||'<p class="note">No existen resultados para esta escala.</p>';
-}
-function renderRanges(){
-  const vals=computedFeatures().map(f=>f.properties.GI_VAL).filter(Number.isFinite),counts=palette.map(p=>vals.filter(v=>rangeFor(v)?.name===p.name).length),total=vals.length;
-  $('chart').innerHTML=total?`<div class="range-stack">${palette.map((p,i)=>`<div class="range-segment" title="${p.name}: ${counts[i]}" style="width:${counts[i]/total*100}%;background:${p.color}">${counts[i]||''}</div>`).join('')}</div><div class="range-detail">${palette.map((p,i)=>`<div class="legend-row"><i class="swatch" style="background:${p.color}"></i><span>${p.name}</span><b>${counts[i]} · ${fmt(counts[i]/total*100)}%</b></div>`).join('')}</div>`:'<p class="note">No existen resultados para distribuir.</p>';
-}
-function renderTrend(){
-  const feature=state.selectedFeature;if(!feature){$('chart').innerHTML='<p class="note">Seleccione una unidad en el mapa.</p>';return}
-  const a=featureValue(feature,state.scale,2025),b=featureValue(feature,state.scale,2026);
-  if(!Number.isFinite(a)||!Number.isFinite(b)){$('chart').innerHTML='<p class="note">La comparación exige resultados válidos en ambos años.</p>';return}
-  const y=v=>205-v*165;$('chart').innerHTML=`<svg class="trend-svg" viewBox="0 0 300 240"><line x1="45" y1="205" x2="270" y2="205" stroke="#36506a"/><line x1="85" y1="${y(a)}" x2="230" y2="${y(b)}" stroke="#20c6c7" stroke-width="4"/><circle cx="85" cy="${y(a)}" r="7" fill="#337ce5"/><circle cx="230" cy="${y(b)}" r="7" fill="#20c6c7"/><text x="70" y="225" class="trend-label">2025</text><text x="215" y="225" class="trend-label">2026</text><text x="68" y="${y(a)-12}" class="trend-label">${fmt(a)}</text><text x="213" y="${y(b)-12}" class="trend-label">${fmt(b)}</text></svg>`;
-}
-function renderHierarchyChart(){
-  const f=state.selectedFeature;if(!f){$('chart').innerHTML='<p class="note">Seleccione una unidad en el mapa.</p>';return}
-  const p=f.properties,items=[];
-  if(['manzana','barrio'].includes(state.scale))items.push(['Barrio',aggregateFor('barrio',p.BARRIO,state.year)]);
-  if(state.scale!=='comuna')items.push(['Territorio',aggregateFor('territorio',p.TERRITORIO,state.year)]);
-  items.push(['Comuna',aggregateFor('comuna','SANTIAGO',state.year)]);
-  $('chart').innerHTML=items.map(([n,v])=>`<div class="hierarchy-row"><span>${n}</span><div class="bar-track"><div class="bar-fill" style="width:${Number.isFinite(v)?v*100:0}%"></div></div><b>${fmt(v)}</b></div>`).join('');
-}
-
-function openMethod(){
-  const selected=state.selectedIndicators.map(indicatorByCode).filter(Boolean);
-  $('dialogContent').innerHTML=`<h2>Ficha resumida</h2><p class="note">Información publicada exclusivamente desde las hojas 2025 y 2026 de Síntesis 2.</p>${selected.map(i=>`<h3>${i.codigo} · ${i.indicador}</h3><dl class="dialog-grid"><dt>Unidad</dt><dd>${i.unidad??'–'}</dd><dt>Resultado 2025</dt><dd>${i.publicado_2025?'Disponible':'No disponible'}</dd><dt>Resultado 2026</dt><dd>${i.publicado_2026?'Disponible':'No disponible'}</dd></dl>`).join('')}${selected.length>1?`<h3>Resultado agrupado</h3><p>Promedio simple de ${selected.length} resultados normalizados. Si falta uno de los componentes, el promedio queda sin datos.</p>`:''}`;$('infoDialog').showModal();
-}
-function openReport(){
-  const f=state.selectedFeature,name=f?.properties[levelFields[state.scale]]??'Sin unidad seleccionada',value=f?featureValue(f):null,old=f?featureValue(f,state.scale,state.compareYear):null;
-  $('dialogContent').innerHTML=`<h2>Reporte comparativo</h2><p><b>${name}</b> · ${state.scale} · ${state.year}</p><table class="report-table"><tr><th>Indicadores</th><td>${state.selectedIndicators.join(', ')||'Sin selección'}</td></tr><tr><th>Resultado actual</th><td>${fmt(value)}</td></tr><tr><th>Resultado ${state.compareYear}</th><td>${fmt(old)}</td></tr><tr><th>Variación</th><td>${Number.isFinite(value)&&Number.isFinite(old)?fmt(value-old):'No comparable'}</td></tr><tr><th>Rango actual</th><td>${rangeFor(value)?.name??'Sin datos'}</td></tr><tr><th>Método agrupado</th><td>${state.selectedIndicators.length>1?'Promedio simple de resultados normalizados':'Indicador individual'}</td></tr></table><p class="note">Fuente pública: resultados normalizados de las hojas 2025 y 2026 de Síntesis 2. No se publican cálculos ni capas específicas de indicadores.</p>`;$('infoDialog').showModal();
-}
-
-function bind(){
-  $('scaleSelect').addEventListener('change',e=>{state.scale=e.target.value;state.selectedFeature=null;refresh()});
-  $('yearSelect').addEventListener('change',e=>{state.year=Number(e.target.value);renderIndicators();refresh()});
-  $('compareYearSelect').addEventListener('change',e=>{state.compareYear=Number(e.target.value);refresh()});
-  $('dimensionSelect').addEventListener('change',renderIndicators);
-  $('clearIndicators').addEventListener('click',()=>{state.selectedIndicators=[];renderIndicators();refresh()});
-  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.view=b.dataset.view;renderChart()}));
-  $('methodButton').addEventListener('click',openMethod);$('reportButton').addEventListener('click',openReport);
-  document.querySelector('.close-dialog').addEventListener('click',()=>$('infoDialog').close());
-}
+const publishable=(code,year)=>Boolean(indicatorByCode(code)?.[`publicado_${year}`]);
+const indicatorDescription=i=>i.descripcion||`Mide territorialmente ${String(i.indicador).toLowerCase()} y expresa el resultado normalizado en una escala de 0 a 1. Unidad de referencia: ${i.unidad||'no especificada'}.`;
+const directionText=i=>inverseCodes.has(i.codigo)?'Normalización inversa: el valor original fue invertido; un resultado normalizado mayor representa una condición territorial más favorable.':'Resultado normalizado según el sentido definido en Síntesis 2.';
+function codesAvailable(){return state.db.indicadores.filter(i=>state.selectedDimensions.some(p=>i.codigo.startsWith(p))&&(publishable(i.codigo,state.year)||(state.compareYear&&publishable(i.codigo,state.compareYear))))}
+function barrioValue(name,year){const row=rowFor(name,year),vals=state.selectedIndicators.map(c=>publishable(c,year)?Number(row?.valores?.[c]):NaN).filter(Number.isFinite);return vals.length===state.selectedIndicators.length&&vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null}
+function featureValue(feature,scale=state.scale,year=state.year){if(!state.selectedIndicators.length||!feature)return null;if(scale==='barrio')return barrioValue(feature.properties.BARRIO,year);if(scale==='manzana')return null;const barrios=state.layers.barrio.features.filter(b=>scale==='comuna'||norm(b.properties.TERRITORIO)===norm(feature.properties.TERRITORIO));const vals=barrios.map(b=>barrioValue(b.properties.BARRIO,year)).filter(Number.isFinite);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null}
+const currentFeatures=()=>state.layers[state.scale]?.features??[];
+const computedFeatures=(year=state.year)=>currentFeatures().map(f=>{const value=featureValue(f,state.scale,year);return {...f,properties:{...f.properties,GI_VAL:value,GI_RANGO:rangeFor(value)?.name??'Sin datos'}}});
+const selectedComputed=()=>{if(!state.selectedFeature)return null;const key=levelFields[state.scale];return computedFeatures().find(f=>norm(f.properties[key])===norm(state.selectedFeature.properties[key]))};
+function renderIndicators(){const options=codesAvailable();state.selectedIndicators=state.selectedIndicators.filter(c=>options.some(i=>i.codigo===c));if(!state.selectedIndicators.length&&options.length)state.selectedIndicators=[options[0].codigo];$('indicatorList').innerHTML=options.map(i=>`<label class="indicator-option"><input type="checkbox" value="${esc(i.codigo)}" ${state.selectedIndicators.includes(i.codigo)?'checked':''}><span><b>${esc(i.codigo)}</b> · ${esc(i.indicador)}<small>${esc(i.unidad??'Unidad no especificada')}</small></span></label>`).join('')||'<p class="note">Seleccione al menos una dimensión con indicadores disponibles.</p>';$('indicatorList').querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{state.selectedIndicators=[...$('indicatorList').querySelectorAll('input:checked')].map(x=>x.value);refresh()}));renderFormula()}
+function selectedNames(){return state.selectedIndicators.map(indicatorByCode).filter(Boolean).map(i=>`${i.codigo} · ${i.indicador}`)}
+function renderFormula(){const n=state.selectedIndicators.length;$('groupFormula').textContent=n>1?`Promedio simple de ${n} resultados normalizados: ${selectedNames().join('; ')}.`:n===1?`${selectedNames()[0]}. Resultado individual normalizado.`:'Seleccione uno o varios indicadores.';$('valueLabel').textContent=n>1?'Promedio agrupado':'Valor normalizado'}
+function renderLegend(){$('legendItems').innerHTML=palette.map(p=>`<div class="legend-row"><i class="swatch" style="background:${p.color}"></i><span>${p.name}</span><b>${p.label}</b></div>`).join('')}
+function refreshMap(){const fc={type:'FeatureCollection',features:computedFeatures()};if(!map){$('mapStatus').textContent=`${fc.features.length.toLocaleString('es-CL')} unidades cargadas · mapa no disponible`;return}if(map.getSource('territorial'))map.getSource('territorial').setData(fc);$('mapStatus').textContent=`${fc.features.length.toLocaleString('es-CL')} unidades ${state.scale} · resultados ${state.year}`}
+function metrics(feature,year=state.year){const features=computedFeatures(year),values=features.map(f=>f.properties.GI_VAL).filter(Number.isFinite),value=feature?featureValue(feature,state.scale,year):null,avg=values.length?values.reduce((a,b)=>a+b,0)/values.length:null,sorted=[...values].sort((a,b)=>b-a);return {features,values,value,avg,rank:Number.isFinite(value)?sorted.findIndex(v=>v===value)+1:null}}
+function analysisFor(feature){if(!feature)return 'Seleccione una unidad territorial para generar el análisis.';const name=feature.properties[levelFields[state.scale]],m=metrics(feature),range=rangeFor(m.value);if(!Number.isFinite(m.value))return `${name} no dispone de un resultado completo para la selección actual.`;const relation=Math.abs(m.value-m.avg)<.005?'prácticamente igual al':m.value>m.avg?'sobre el':'bajo el';let text=`${name} obtiene ${fmt(m.value)} y se clasifica en rango ${range.name} según los cortes PLADECO. El resultado está ${relation} promedio de ${state.scale} (${fmt(m.avg)}) y ocupa la posición ${m.rank} de ${m.values.length}.`;if(state.compareYear){const old=featureValue(feature,state.scale,state.compareYear);text+=Number.isFinite(old)?` Frente a ${state.compareYear}, la variación es ${m.value-old>=0?'+':''}${fmt(m.value-old)} puntos normalizados.`:` No existe un resultado completo para compararlo con ${state.compareYear}.`}if(state.scale!=='barrio')text+=' Este valor corresponde al promedio de resultados normalizados de los barrios que integran la unidad, no a un recálculo del indicador original.';if(state.selectedIndicators.some(c=>inverseCodes.has(c)))text+=' La interpretación considera variables con normalización inversa, ya transformadas para que un mayor resultado normalizado exprese una condición más favorable.';return text}
+function renderCards(){const selected=selectedComputed(),m=metrics(selected),name=selected?.properties[levelFields[state.scale]]??'Seleccione una unidad';$('selectedValue').textContent=fmt(m.value);$('selectedName').textContent=name;$('scaleAverage').textContent=fmt(m.avg);$('validCount').textContent=`${m.values.length} de ${m.features.length} unidades con resultado`;$('rankValue').textContent=m.rank?`${m.rank}°`:'–';$('rankDetail').textContent=m.rank?`de ${m.values.length} unidades válidas`:'Dentro de la escala';$('rangeValue').textContent=rangeFor(m.value)?.name??'Sin datos';const old=selected&&state.compareYear?featureValue(selected,state.scale,state.compareYear):null;$('changeValue').textContent=!state.compareYear?'Comparación desactivada':Number.isFinite(m.value)&&Number.isFinite(old)?`Variación ${state.compareYear}–${state.year}: ${m.value-old>=0?'+':''}${fmt(m.value-old)}`:'Comparación no disponible';$('contextUnit').textContent=name;renderHierarchy(selected)}
+function aggregateFor(level,name,year){if(level==='barrio'){const f=state.layers.barrio.features.find(x=>norm(x.properties.BARRIO)===norm(name));return f?featureValue(f,'barrio',year):null}if(level==='territorio'){const f=state.layers.territorio.features.find(x=>norm(x.properties.TERRITORIO)===norm(name));return f?featureValue(f,'territorio',year):null}return featureValue(state.layers.comuna.features[0],'comuna',year)}
+function renderHierarchy(feature){if(!feature){$('hierarchyValues').innerHTML='<span class="note">Haz clic en el mapa para ver barrio, territorio y comuna.</span>';return}const p=feature.properties,items=[];if(state.scale==='barrio')items.push(['Barrio',p.BARRIO,aggregateFor('barrio',p.BARRIO,state.year)]);if(state.scale!=='comuna')items.push(['Territorio',p.TERRITORIO,aggregateFor('territorio',p.TERRITORIO,state.year)]);items.push(['Comuna','SANTIAGO',aggregateFor('comuna','SANTIAGO',state.year)]);$('hierarchyValues').innerHTML=items.map(([level,name,value])=>`<div class="context-pill"><span>${level}</span><strong>${esc(name)}</strong><b>${fmt(value)}</b></div>`).join('')}
+function renderChart(){const title={ranking:'Ranking territorial',ranges:'Distribución por rangos PLADECO',trend:'Evolución y análisis temporal'}[state.view];$('chartTitle').textContent=title;({ranking:renderRanking,ranges:renderRanges,trend:renderTrend}[state.view])()}
+function renderRanking(){const rows=computedFeatures().filter(f=>Number.isFinite(f.properties.GI_VAL)).sort((a,b)=>b.properties.GI_VAL-a.properties.GI_VAL);$('chart').innerHTML=rows.map((f,i)=>`<div class="bar-row"><span>${i+1}. ${esc(f.properties[levelFields[state.scale]])}</span><b>${fmt(f.properties.GI_VAL)}</b><div class="bar-track"><div class="bar-fill" style="width:${f.properties.GI_VAL*100}%"></div></div></div>`).join('')||'<p class="note">No existen resultados para esta escala.</p>'}
+function renderRanges(){const vals=computedFeatures().map(f=>f.properties.GI_VAL).filter(Number.isFinite),counts=palette.map(p=>vals.filter(v=>rangeFor(v)?.name===p.name).length),total=vals.length;$('chart').innerHTML=total?`<div class="range-stack">${palette.map((p,i)=>`<div class="range-segment" title="${p.name}: ${counts[i]}" style="width:${counts[i]/total*100}%;background:${p.color}">${counts[i]||''}</div>`).join('')}</div><div class="range-detail">${palette.map((p,i)=>`<div class="legend-row"><i class="swatch" style="background:${p.color}"></i><span>${p.name} · ${p.label}</span><b>${counts[i]} · ${fmt(counts[i]/total*100)}%</b></div>`).join('')}</div>`:'<p class="note">No existen resultados para distribuir.</p>'}
+function renderTrend(){const f=state.selectedFeature;if(!f){$('chart').innerHTML='<p class="note">Seleccione una unidad en el mapa.</p>';return}const name=esc(f.properties[levelFields[state.scale]]),years=state.compareYear?[state.compareYear,state.year]:[state.year],vals=years.map(y=>featureValue(f,state.scale,y));if(vals.some(v=>!Number.isFinite(v))){$('chart').innerHTML='<p class="note">No existen resultados completos para el análisis temporal solicitado.</p>';return}if(years.length===1){$('chart').innerHTML=`<div class="single-year"><strong>${name} · ${state.year}</strong><span>${fmt(vals[0])}</span><b>${rangeFor(vals[0]).name}</b></div><p class="analysis">${esc(analysisFor(f))}</p>`;return}const y=v=>190-v*145;$('chart').innerHTML=`<svg class="trend-svg" viewBox="0 0 300 215"><line x1="45" y1="190" x2="270" y2="190" stroke="#36506a"/><line x1="85" y1="${y(vals[0])}" x2="230" y2="${y(vals[1])}" stroke="#20c6c7" stroke-width="4"/><circle cx="85" cy="${y(vals[0])}" r="7" fill="#337ce5"/><circle cx="230" cy="${y(vals[1])}" r="7" fill="#20c6c7"/><text x="68" y="207" class="trend-label">${years[0]}</text><text x="213" y="207" class="trend-label">${years[1]}</text><text x="66" y="${y(vals[0])-12}" class="trend-label">${fmt(vals[0])}</text><text x="211" y="${y(vals[1])-12}" class="trend-label">${fmt(vals[1])}</text></svg><p class="analysis">${esc(analysisFor(f))}</p>`}
+function reportActions(){return '<p class="report-scope">Los textos describen resultados normalizados y no establecen causalidad.</p>'}
+function openMethod(){const selected=state.selectedIndicators.map(indicatorByCode).filter(Boolean),f=state.selectedFeature;$('dialogContent').innerHTML=`<h2>Ficha de indicador${selected.length===1?'':'es'}</h2><p class="note">Resultados publicados exclusivamente desde 2025 y 2026 de Síntesis 2.</p>${selected.map(i=>`<section class="indicator-sheet"><h3>${esc(i.codigo)} · ${esc(i.indicador)}</h3><p>${esc(indicatorDescription(i))}</p><dl class="dialog-grid"><dt>Unidad de referencia</dt><dd>${esc(i.unidad??'–')}</dd><dt>Sentido</dt><dd>${esc(directionText(i))}</dd><dt>Disponibilidad</dt><dd>2025: ${i.publicado_2025?'sí':'no'} · 2026: ${i.publicado_2026?'sí':'no'}</dd></dl></section>`).join('')}${selected.length>1?`<h3>Resultado agrupado</h3><p>Promedio simple de ${selected.length} resultados normalizados: ${esc(selectedNames().join('; '))}. Si falta un componente, la unidad queda sin resultado.</p>`:''}<h3>Análisis de la selección territorial</h3><p>${esc(analysisFor(f))}</p>${reportActions()}`;$('infoDialog').showModal()}
+function openReport(){const f=state.selectedFeature,name=f?.properties[levelFields[state.scale]]??'Sin unidad seleccionada',value=f?featureValue(f):null,old=f&&state.compareYear?featureValue(f,state.scale,state.compareYear):null,descriptions=state.selectedIndicators.map(indicatorByCode).filter(Boolean);$('dialogContent').innerHTML=`<h2>Reporte ${state.compareYear?'comparativo':'de resultados'}</h2><p><b>${esc(name)}</b> · ${esc(state.scale)} · ${state.year}${state.compareYear?` frente a ${state.compareYear}`:''}</p><table class="report-table"><tr><th>Indicadores seleccionados</th><td>${esc(selectedNames().join('; ')||'Sin selección')}</td></tr><tr><th>Descripción breve</th><td>${descriptions.map(i=>esc(indicatorDescription(i))).join('<br>')}</td></tr><tr><th>Resultado ${state.year}</th><td>${fmt(value)}</td></tr>${state.compareYear?`<tr><th>Resultado ${state.compareYear}</th><td>${fmt(old)}</td></tr><tr><th>Variación</th><td>${Number.isFinite(value)&&Number.isFinite(old)?`${value-old>=0?'+':''}${fmt(value-old)}`:'No comparable'}</td></tr>`:''}<tr><th>Rango PLADECO</th><td>${rangeFor(value)?.name??'Sin datos'}</td></tr><tr><th>Agregación</th><td>${state.selectedIndicators.length>1?'Promedio simple de resultados normalizados':'Indicador individual'}${state.scale!=='barrio'?'; promedio territorial de barrios':''}</td></tr></table><h3>Análisis de resultados</h3><p>${esc(analysisFor(f))}</p><p class="note">Fuente pública: resultados normalizados 2025–2026 de Síntesis 2. No se publican fórmulas, cálculos internos ni capas específicas de indicadores.</p>${reportActions()}`;$('infoDialog').showModal()}
+function downloadPdf(){const text=$('dialogContent').innerText;if(window.jspdf?.jsPDF){const doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'}),lines=doc.splitTextToSize(text,180);let y=15;lines.forEach(line=>{if(y>282){doc.addPage();y=15}doc.text(line,15,y);y+=5});doc.save(`geoindicadores-${state.scale}-${state.year}.pdf`)}else window.print()}
+function bind(){$('scaleSelect').addEventListener('change',e=>{state.scale=e.target.value;state.selectedFeature=null;refresh()});$('yearSelect').addEventListener('change',e=>{state.year=Number(e.target.value);renderIndicators();refresh()});$('compareYearSelect').addEventListener('change',e=>{state.compareYear=e.target.value==='none'?null:Number(e.target.value);renderIndicators();refresh()});$('dimensionList').querySelectorAll('input').forEach(x=>x.addEventListener('change',()=>{state.selectedDimensions=[...$('dimensionList').querySelectorAll('input:checked')].map(i=>i.value);renderIndicators();refresh()}));$('clearIndicators').addEventListener('click',()=>{state.selectedIndicators=[];renderIndicators();refresh()});document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.view=b.dataset.view;renderChart()}));$('methodButton').addEventListener('click',openMethod);$('reportButton').addEventListener('click',openReport);document.querySelector('.close-dialog').addEventListener('click',()=>$('infoDialog').close());$('printDialog').addEventListener('click',()=>window.print());$('pdfDialog').addEventListener('click',downloadPdf)}
 function refresh(){renderFormula();refreshMap();renderCards();renderChart()}
-
-async function init(){
-  renderLegend();bind();
-  const db=await fetch('./data/sintesis-visor.json').then(r=>r.json());state.db=db;
-  for(const [level,files] of Object.entries(layerFiles)){
-    const parts=await Promise.all(files.map(f=>fetch(`./data/${f}`).then(r=>r.json())));
-    state.layers[level]={type:'FeatureCollection',features:parts.flatMap(p=>p.features)};
-  }
-  $('sourceStatus').textContent='Resultados: Síntesis 2 · 2025 y 2026';renderIndicators();
-  try{map=new maplibregl.Map({container:'map',style:{version:8,sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap'}},layers:[{id:'osm',type:'raster',source:'osm',paint:{'raster-saturation':-0.75,'raster-brightness-max':0.55}}]},center:[-70.653,-33.451],zoom:12.5});
-  map.addControl(new maplibregl.NavigationControl(),'top-right');
-  map.on('load',()=>{map.addSource('territorial',{type:'geojson',data:{type:'FeatureCollection',features:[]}});map.addLayer({id:'territorial-fill',type:'fill',source:'territorial',paint:{'fill-color':['match',['get','GI_RANGO'],'Muy bajo',palette[0].color,'Bajo',palette[1].color,'Medio',palette[2].color,'Alto',palette[3].color,'#607486'],'fill-opacity':.72}});map.addLayer({id:'territorial-line',type:'line',source:'territorial',paint:{'line-color':'#e8f7ff','line-width':['case',['boolean',['feature-state','selected'],false],3,1]}});map.on('click','territorial-fill',e=>{state.selectedFeature=e.features[0];renderCards();renderChart();const p=e.features[0].properties,name=p[levelFields[state.scale]],v=featureValue(state.selectedFeature);new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<strong>${name}</strong><br>${state.scale}<br>Resultado: ${fmt(v)}<br>Rango: ${rangeFor(v)?.name??'Sin datos'}`).addTo(map)});map.on('mouseenter','territorial-fill',()=>map.getCanvas().style.cursor='pointer');map.on('mouseleave','territorial-fill',()=>map.getCanvas().style.cursor='');refresh()});}
-  catch(error){console.error(error);map=null;$('mapStatus').textContent='Mapa no disponible en este navegador';renderCards();renderChart()}
-}
-init().catch(error=>{console.error(error);$('sourceStatus').textContent='Error al cargar la base';$('mapStatus').textContent='No fue posible iniciar el visor';});
+async function init(){renderLegend();bind();state.db=await fetch('./data/sintesis-visor.json').then(r=>r.json());for(const [level,files] of Object.entries(layerFiles)){const parts=await Promise.all(files.map(f=>fetch(`./data/${f}`).then(r=>r.json())));state.layers[level]={type:'FeatureCollection',features:parts.flatMap(p=>p.features)}}$('sourceStatus').textContent='Resultados normalizados: Síntesis 2 · 2025 y 2026';renderIndicators();try{map=new maplibregl.Map({container:'map',style:{version:8,sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap'}},layers:[{id:'osm',type:'raster',source:'osm',paint:{'raster-saturation':-.75,'raster-brightness-max':.55}}]},center:[-70.653,-33.451],zoom:12.5});map.addControl(new maplibregl.NavigationControl(),'top-right');map.on('load',()=>{map.addSource('territorial',{type:'geojson',data:{type:'FeatureCollection',features:[]}});map.addLayer({id:'territorial-fill',type:'fill',source:'territorial',paint:{'fill-color':['match',['get','GI_RANGO'],'Muy bajo',palette[0].color,'Bajo',palette[1].color,'Medio',palette[2].color,'Alto',palette[3].color,'#607486'],'fill-opacity':.72}});map.addLayer({id:'territorial-line',type:'line',source:'territorial',paint:{'line-color':'#e8f7ff','line-width':1}});map.on('click','territorial-fill',e=>{state.selectedFeature=e.features[0];renderCards();renderChart();const p=e.features[0].properties,name=p[levelFields[state.scale]],v=featureValue(state.selectedFeature),inds=selectedNames();new maplibregl.Popup({maxWidth:'360px'}).setLngLat(e.lngLat).setHTML(`<strong>${esc(name)}</strong><br>${esc(state.scale)} · ${state.year}<br><b>Indicador${inds.length===1?'':'es'}:</b> ${esc(inds.join('; '))}<br>${inds.length>1?`<b>Promedio de ${inds.length} resultados normalizados</b><br>`:''}Resultado: ${fmt(v)} · ${rangeFor(v)?.name??'Sin datos'}`).addTo(map)});map.on('mouseenter','territorial-fill',()=>map.getCanvas().style.cursor='pointer');map.on('mouseleave','territorial-fill',()=>map.getCanvas().style.cursor='');refresh()})}catch(error){console.error(error);map=null;$('mapStatus').textContent='Mapa no disponible en este navegador';renderCards();renderChart()}}
+init().catch(error=>{console.error(error);$('sourceStatus').textContent='Error al cargar la base';$('mapStatus').textContent='No fue posible iniciar el visor'});
