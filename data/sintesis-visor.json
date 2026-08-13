@@ -237,7 +237,7 @@
   "series": [
     {
       "id": "1",
-      "nombre": "STA LUCÍA FORESTAL",
+      "nombre": "SANTA LUCÍA FORESTAL",
       "anio": 2025,
       "valores": {
         "IAT_1": 0.6521739130434783,
@@ -1290,7 +1290,7 @@
     },
     {
       "id": "1",
-      "nombre": "STA LUCÍA FORESTAL",
+      "nombre": "SANTA LUCÍA FORESTAL",
       "anio": 2026,
       "valores": {
         "IAT_1": 0.9638560965175276,
@@ -2343,4 +2343,3 @@
     }
   ]
 }
-
