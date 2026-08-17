@@ -1,0 +1,582 @@
+[
+  {
+    "indicador": "IAT_1",
+    "iniciativa": "ADQUISICIÓN DE CONTENEDORES DE RESIDUOS",
+    "tipologia": "ASEO Y LIMPIEZA URBANA",
+    "dimension": "AMBIENTAL",
+    "eje": "GESTIÓN INTEGRAL DE RESIDUOS",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_1",
+    "iniciativa": "ADQUISICIÓN DE MAQUINARIA OPERATIVA",
+    "tipologia": "ASEO Y LIMPIEZA URBANA",
+    "dimension": "AMBIENTAL",
+    "eje": "GESTIÓN INTEGRAL DE RESIDUOS",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_2",
+    "iniciativa": "PROGRAMA DE REUTILIZACIÓN Y RECICLAJE EN SECTORES COMERCIALES Y PRODUCTIVOS",
+    "tipologia": "ASEO Y LIMPIEZA URBANA",
+    "dimension": "AMBIENTAL",
+    "eje": "GESTIÓN INTEGRAL DE RESIDUOS",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_2",
+    "iniciativa": "IMPLEMENTACIÓN DE PLAN DE RECOLECCIÓN DIFERENCIADA DE RESIDUOS EN SECTORES COMERCIALES Y GASTRONÓMICOS",
+    "tipologia": "ASEO Y LIMPIEZA URBANA",
+    "dimension": "AMBIENTAL",
+    "eje": "GESTIÓN INTEGRAL DE RESIDUOS",
+    "alcance": "BARRIAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_3",
+    "iniciativa": "CONSTRUCCIÓN DE PARQUE URBANO SOBRE AUTOPISTA CENTRAL",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "INTERCOMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IAT_3",
+    "iniciativa": "CONSTRUCCIÓN DE PARQUE FERROCARRIL",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "INTERCOMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IAT_4",
+    "iniciativa": "MEJORAMIENTO Y GESTIÓN INTEGRAL DEL PARQUE O'HIGGINS",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "BARRIAL",
+    "barrio": "PARQUE O'HIGGINS",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IAT_4",
+    "iniciativa": "MEJORAMIENTO Y GESTIÓN INTEGRAL DEL PARQUE DE LOS REYES",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IAT_5",
+    "iniciativa": "IMPLEMENTACIÓN DE ECOBARRIO — POLÍGONO MATUCANA / BALMACEDA / MANUEL RODRÍGUEZ / MAPOCHO",
+    "tipologia": "MEDIOAMBIENTE",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "BARRIAL",
+    "barrio": "BALMACEDA",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_5",
+    "iniciativa": "IMPLEMENTACIÓN DE ECOBARRIO — POLÍGONO SANTA ANA",
+    "tipologia": "MEDIOAMBIENTE",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "BARRIAL",
+    "barrio": "BRASIL",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IAT_6",
+    "iniciativa": "HABILITACIÓN DE PASEOS CANINOS",
+    "tipologia": "ASEO Y LIMPIEZA URBANA",
+    "dimension": "AMBIENTAL",
+    "eje": "AMBIENTE SALUDABLE",
+    "alcance": "BARRIAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IAT_6",
+    "iniciativa": "ADQUISICIÓN DE SERVICIOS MÓVILES VETERINARIOS",
+    "tipologia": "SERVICIOS",
+    "dimension": "AMBIENTAL",
+    "eje": "AMBIENTE SALUDABLE",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_7",
+    "iniciativa": "HABILITACIÓN DE ZONA PILOTO DE CONVIVENCIA ACÚSTICA EN ECOBARRIOS",
+    "tipologia": "MEDIOAMBIENTE",
+    "dimension": "AMBIENTAL",
+    "eje": "AMBIENTE SALUDABLE",
+    "alcance": "BARRIAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_7",
+    "iniciativa": "HABILITACIÓN DE ZONA PILOTO DE CONVIVENCIA ACÚSTICA — SANTIAGO EN ALTURA",
+    "tipologia": "MEDIOAMBIENTE",
+    "dimension": "AMBIENTAL",
+    "eje": "AMBIENTE SALUDABLE",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IAT_8",
+    "iniciativa": "CONSTRUCCIÓN DE PARQUE LINEAL BLANCO ENCALADA",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "BARRIAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IAT_8",
+    "iniciativa": "MEJORAMIENTO Y GESTIÓN INTEGRAL DEL PARQUE DE LOS REYES",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IAT_9",
+    "iniciativa": "MEJORAMIENTO Y GESTIÓN INTEGRAL DEL PARQUE FORESTAL",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IAT_9",
+    "iniciativa": "MEJORAMIENTO DE LOS PARQUES INTERCOMUNALES ALMAGRO Y FORESTAL",
+    "tipologia": "ÁREAS VERDES",
+    "dimension": "AMBIENTAL",
+    "eje": "INFRAESTRUCTURA VERDE URBANA",
+    "alcance": "INTERCOMUNAL",
+    "barrio": "PARQUE ALMAGRO",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IUT_1",
+    "iniciativa": "NUEVA ALAMEDA",
+    "tipologia": "ESPACIO PÚBLICO INTEGRAL",
+    "dimension": "URBANA",
+    "eje": "ESPACIOS PÚBLICOS",
+    "alcance": "INTERCOMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IUT_1",
+    "iniciativa": "MEJORAMIENTO INTEGRAL DE ESPACIO PÚBLICO — AVENIDA MAPOCHO",
+    "tipologia": "ESPACIO PÚBLICO INTEGRAL",
+    "dimension": "URBANA",
+    "eje": "ESPACIOS PÚBLICOS",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IUT_2",
+    "iniciativa": "DIAGNÓSTICO DEL ESTADO DEL PATRIMONIO CONSTRUIDO",
+    "tipologia": "CULTURA",
+    "dimension": "URBANA",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IUT_2",
+    "iniciativa": "REVITALIZACIÓN DE BARRIOS E INFRAESTRUCTURA PATRIMONIAL — CENTRO HISTÓRICO",
+    "tipologia": "ESPACIO PÚBLICO INTEGRAL",
+    "dimension": "URBANA",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "BARRIAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IUT_3",
+    "iniciativa": "MEJORAMIENTO DE CRUCES PEATONALES SEGUROS — EJE MATTA",
+    "tipologia": "TRANSITO / MOVILIDAD",
+    "dimension": "URBANA",
+    "eje": "MOVILIDADES JUSTAS",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IUT_3",
+    "iniciativa": "MEJORAMIENTO DE CRUCES PEATONALES SEGUROS — EJE MATUCANA",
+    "tipologia": "TRANSITO / MOVILIDAD",
+    "dimension": "URBANA",
+    "eje": "MOVILIDADES JUSTAS",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IUT_4",
+    "iniciativa": "DIAGNÓSTICO DEL ESTADO DEL PATRIMONIO CONSTRUIDO",
+    "tipologia": "CULTURA",
+    "dimension": "URBANA",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IUT_4",
+    "iniciativa": "REVITALIZACIÓN DE BARRIOS E INFRAESTRUCTURA PATRIMONIAL — POLÍGONO MATTA MADRID(PRBIPE)",
+    "tipologia": "ESPACIO PÚBLICO INTEGRAL",
+    "dimension": "URBANA",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "BARRIAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IUT_5",
+    "iniciativa": "MEJORAMIENTO DE INFRAESTRUCTURA DE TRANSPORTE URBANO BUSES RED",
+    "tipologia": "TRANSITO / MOVILIDAD",
+    "dimension": "URBANA",
+    "eje": "MOVILIDADES JUSTAS",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IUT_5",
+    "iniciativa": "CONSTRUCCIÓN DE NUEVAS ESTACIONES DE METRO LÍNEA 7",
+    "tipologia": "TRANSITO / MOVILIDAD",
+    "dimension": "URBANA",
+    "eje": "MOVILIDADES JUSTAS",
+    "alcance": "INTERCOMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IUT_6",
+    "iniciativa": "GESTIÓN DE RUTAS PATRIMONIALES Y TURÍSTICAS",
+    "tipologia": "CULTURA",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IUT_6",
+    "iniciativa": "HABILITACIÓN DE GUÍA VIRTUAL DE RUTAS PATRIMONIALES PARA TURISMO CULTURAL SOSTENIBLE E INCLUSIVO",
+    "tipologia": "TURISMO",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IUT_7",
+    "iniciativa": "CONSTRUCCIÓN DE 1.300 VIVIENDAS DS19 — PLAN CIUDADES JUSTAS / PROYECTO CIUDAD MAPOCHO",
+    "tipologia": "VIVIENDA",
+    "dimension": "URBANA",
+    "eje": "GESTIÓN DE VIVIENDA",
+    "alcance": "BARRIAL",
+    "barrio": "BALMACEDA",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IUT_7",
+    "iniciativa": "CONSTRUCCIÓN DE VIVIENDAS BAJO PROGRAMA PEQUEÑOS CONDOMINIOS",
+    "tipologia": "VIVIENDA",
+    "dimension": "URBANA",
+    "eje": "GESTIÓN DE VIVIENDA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IUT_8",
+    "iniciativa": "DIAGNÓSTICO DEL ESTADO DEL PATRIMONIO CONSTRUIDO",
+    "tipologia": "CULTURA",
+    "dimension": "URBANA",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IUT_8",
+    "iniciativa": "ILUMINACION ORNAMENTAL MH Y ZT",
+    "tipologia": "CULTURA",
+    "dimension": "URBANA",
+    "eje": "REVITALIZACIÓN PATRIMONIAL",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_1",
+    "iniciativa": "ADQUISICIÓN DE TECNOLOGÍA PARA PREVENCIÓN Y SEGURIDAD COMUNITARIA",
+    "tipologia": "SEGURIDAD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SEGURIDAD HUMANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_1",
+    "iniciativa": "SISTEMA DE GESTIÓN DE SEGURIDAD — CENTRAL DE TELEVIGILANCIA Y COMUNICACIONES",
+    "tipologia": "SEGURIDAD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SEGURIDAD HUMANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_2",
+    "iniciativa": "ESTUDIO DE FACTIBILIDAD PARA HABILITACIÓN DE RED DE SALUD MUNCIPAL",
+    "tipologia": "SALUD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_2",
+    "iniciativa": "HABILITACIÓN DE CENTRO DE SALUD ROMERO",
+    "tipologia": "SALUD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "BARRIAL",
+    "barrio": "YUNGAY",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IST_3",
+    "iniciativa": "CONSTRUCCIÓN PARQUE DEPORTIVO EX FANTASILANDIA",
+    "tipologia": "DEPORTE",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "BARRIAL",
+    "barrio": "PARQUE O'HIGGINS",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IST_3",
+    "iniciativa": "HABILITACIÓN DE CIRCUITOS DEPORTIVOS",
+    "tipologia": "SALUD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_4",
+    "iniciativa": "IMPLEMENTACIÓN DE MÓVIL CON BOX DE SALUD ESPECIALIZADA",
+    "tipologia": "SALUD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_4",
+    "iniciativa": "CONSTRUCCIÓN DE SAR EN TERRENO SOCIEDAD AGRÍCOLA PORVENIR 342",
+    "tipologia": "SALUD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "BARRIAL",
+    "barrio": "10 DE JULIO",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IST_5",
+    "iniciativa": "CONSTRUCCIÓN COSAM CENTRO ORIENTE",
+    "tipologia": "SALUD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "BARRIAL",
+    "barrio": "10 DE JULIO",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IST_5",
+    "iniciativa": "HABILITACIÓN INMUEBLE ABATE MOLINA — COSAM",
+    "tipologia": "SALUD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SALUD Y VIDA SANA",
+    "alcance": "BARRIAL",
+    "barrio": "MEIGGS",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IST_6",
+    "iniciativa": "CONSTRUCCIÓN DE SEGUNDA ETAPA DEL CENTRO CULTURAL GAM",
+    "tipologia": "CULTURA",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "CULTURA Y EDUCACIÓN",
+    "alcance": "BARRIAL",
+    "barrio": "SANTA LUCÍA FORESTAL",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IST_6",
+    "iniciativa": "RED COMUNAL DE POLICENTROS SOCIOCULTURALES",
+    "tipologia": "SOCIAL",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SOCIEDAD DEL CUIDADO",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IST_7",
+    "iniciativa": "ADQUISICIÓN DE TECNOLOGÍA PARA PREVENCIÓN Y SEGURIDAD COMUNITARIA",
+    "tipologia": "SEGURIDAD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SEGURIDAD HUMANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_7",
+    "iniciativa": "EQUIPAMIENTO DE TECNOLOGÍA PARA FORTALECIMIENTO DE COMITÉS DE SEGURIDAD VECINAL",
+    "tipologia": "SEGURIDAD",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SEGURIDAD HUMANA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_8",
+    "iniciativa": "NORMALIZACIÓN DE INSTALACIONES DE JARDÍN INFANTIL MUNICIPAL",
+    "tipologia": "EDUCACIÓN",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "CULTURA Y EDUCACIÓN",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IST_8",
+    "iniciativa": "CONSTRUCCIÓN DE JARDÍN INFANTIL — CALLE CUEVAS",
+    "tipologia": "EDUCACIÓN",
+    "dimension": "SOCIOCULTURAL",
+    "eje": "SOCIEDAD DEL CUIDADO",
+    "alcance": "BARRIAL",
+    "barrio": "MATTA NORTE",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IET_1",
+    "iniciativa": "PROGRAMA DE RECUPERACIÓN COMERCIAL Y ASOCIATIVIDAD EN BARRIOS DE ESPECIALIDAD",
+    "tipologia": "DESARROLLO ECONÓMICO LOCAL",
+    "dimension": "ECONÓMICA",
+    "eje": "FOMENTO DE SECTORES",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IET_1",
+    "iniciativa": "PLAN DE ACTIVACIÓN ECONOMICA HUB GASTRONÓMICO — SECTOR CENTRO HISTÓRICO",
+    "tipologia": "DESARROLLO ECONÓMICO LOCAL",
+    "dimension": "ECONÓMICA",
+    "eje": "FOMENTO DE SECTORES",
+    "alcance": "BARRIAL",
+    "barrio": "CENTRO HISTÓRICO",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IET_2",
+    "iniciativa": "MEJORAMIENTO INTEGRAL DE EJES COMERCIALES — ESPACIO PÚBLICO, LOGÍSTICA ÚLTIMA MILLA Y ESTACIONAMIENTOS",
+    "tipologia": "DESARROLLO ECONÓMICO LOCAL",
+    "dimension": "ECONÓMICA",
+    "eje": "INFRAESTRUCTURA Y LOGÍSTICA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "LARGO (más de 5 años)"
+  },
+  {
+    "indicador": "IET_2",
+    "iniciativa": "NORMALIZACIÓN DE ÁREAS Y HORARIOS DE CARGA Y DESCARGA EN EJES COMERCIALES",
+    "tipologia": "DESARROLLO ECONÓMICO LOCAL",
+    "dimension": "ECONÓMICA",
+    "eje": "INFRAESTRUCTURA Y LOGÍSTICA",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "MEDIANO (3-5 años)"
+  },
+  {
+    "indicador": "IET_3",
+    "iniciativa": "PROGRAMA DE TURISMO, CULTURA E IDENTIDAD CAPITAL",
+    "tipologia": "TURISMO",
+    "dimension": "ECONÓMICA",
+    "eje": "FOMENTO DE SECTORES",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IET_3",
+    "iniciativa": "BUS TURISTICO MUNICIPAL",
+    "tipologia": "TURISMO",
+    "dimension": "ECONÓMICA",
+    "eje": "FOMENTO DE SECTORES",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IET_4",
+    "iniciativa": "PROGRAMA DE CAPACITACIÓN DE COMPETITIVIDAD LABORAL EN INDUSTRIAS CREATIVAS — ECONOMÍAS NARANJA",
+    "tipologia": "DESARROLLO ECONÓMICO LOCAL",
+    "dimension": "ECONÓMICA",
+    "eje": "INNOVACIÓN Y DESARROLLO",
+    "alcance": "COMUNAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "CORTO (1-2 años)"
+  },
+  {
+    "indicador": "IET_4",
+    "iniciativa": "FOMENTO DE INDUSTRIAS CREATIVAS",
+    "tipologia": "DESARROLLO ECONÓMICO LOCAL",
+    "dimension": "ECONÓMICA",
+    "eje": "INNOVACIÓN Y DESARROLLO",
+    "alcance": "BARRIAL",
+    "barrio": "DIVERSOS SECTORES",
+    "plazo": "MEDIANO (3-5 años)"
+  }
+]
