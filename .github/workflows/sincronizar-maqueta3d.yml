@@ -1,0 +1,46 @@
+name: Sincronizar Maqueta 3D
+
+on:
+  push:
+    paths:
+      - '.github/workflows/sincronizar-maqueta3d.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Instalar gdown
+        run: python -m pip install --quiet gdown
+
+      - name: Descargar datos públicos de Drive
+        run: |
+          mkdir -p maqueta3d/data
+          gdown --id 1SLituPvzLKh70fEuL2l7dtopCzE8ATuh -O maqueta3d/data/sii_data.js
+          gdown --id 1LraVCKUySsfFGDgJarIWz9h8VKZj4hMk -O maqueta3d/data/santa_lucia_dem.js
+          test -s maqueta3d/data/sii_data.js
+          test -s maqueta3d/data/santa_lucia_dem.js
+          grep -q 'MAQUETA_SII_GZIP_B64' maqueta3d/data/sii_data.js
+          grep -q 'SANTA_LUCIA_DEM' maqueta3d/data/santa_lucia_dem.js
+          echo "SII bytes: $(wc -c < maqueta3d/data/sii_data.js)"
+          echo "DEM bytes: $(wc -c < maqueta3d/data/santa_lucia_dem.js)"
+
+      - name: Publicar archivos locales
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add maqueta3d/data/sii_data.js maqueta3d/data/santa_lucia_dem.js
+          if git diff --cached --quiet; then
+            echo 'Sin cambios'
+          else
+            git commit -m 'Publica datos locales SII y DEM para Maqueta 3D'
+            git push
+          fi
