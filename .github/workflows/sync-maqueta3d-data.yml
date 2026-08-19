@@ -1,0 +1,27 @@
+name: Sync Maqueta 3D Data
+on:
+  push:
+    paths:
+      - '.github/workflows/sync-maqueta3d-data.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar datos preparados
+        run: |
+          mkdir -p maqueta3d/data
+          curl -L --fail --retry 3 'https://drive.usercontent.google.com/download?id=1SLituPvzLKh70fEuL2l7dtopCzE8ATuh&export=download&confirm=t' -o maqueta3d/data/sii_data.js
+          curl -L --fail --retry 3 'https://drive.usercontent.google.com/download?id=1LraVCKUySsfFGDgJarIWz9h8VKZj4hMk&export=download&confirm=t' -o maqueta3d/data/santa_lucia_dem.js
+          test -s maqueta3d/data/sii_data.js
+          test -s maqueta3d/data/santa_lucia_dem.js
+      - name: Publicar datos locales
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add maqueta3d/data/sii_data.js maqueta3d/data/santa_lucia_dem.js
+          git diff --cached --quiet || git commit -m 'Sincroniza datos SII y DEM Maqueta 3D'
+          git push
