@@ -1,1 +1,135 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Maqueta 3D Santiago</title><link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet"><script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script><style>*{box-sizing:border-box}html,body,#map{height:100%;margin:0;font-family:Arial;color:#202124}.panel{position:absolute;z-index:5;top:14px;left:14px;width:330px;background:#fffffff5;border-radius:14px;box-shadow:0 4px 20px #0002;padding:14px}.panel h1{font-size:18px;margin:0}.sub{font-size:11px;color:#6b7280;margin:3px 0 10px}.search,.view{display:flex;gap:6px;margin-top:7px}.search input{flex:1;padding:9px;border:1px solid #d1d5db;border-radius:8px}.search button,.view button,.layers-btn{border:1px solid #d1d5db;background:white;border-radius:8px;padding:8px;cursor:pointer}.view button{flex:1;font-weight:700}.layers-btn{width:100%;margin-top:8px;text-align:left;font-weight:700}.layers{display:none;border-top:1px solid #e5e7eb;margin-top:7px;padding-top:6px}.layers.open{display:block}.layers label{display:flex;gap:7px;align-items:center;font-size:12px;padding:4px}.dot{width:11px;height:11px;border-radius:2px;display:inline-block}.legend{position:absolute;z-index:4;left:14px;bottom:20px;background:#fffffff2;padding:10px 12px;border-radius:10px;box-shadow:0 2px 12px #0002;font-size:11px}.lg{display:grid;grid-template-columns:auto auto;gap:4px 12px;margin-top:5px}.sw{width:20px;height:10px;display:inline-block;margin-right:5px}.info{position:absolute;z-index:5;right:14px;top:14px;width:300px;background:#fffffff5;border-radius:12px;padding:13px;box-shadow:0 3px 18px #0002;display:none}.info.show{display:block}.row{font-size:12px;border-top:1px solid #e5e7eb;padding:6px 0}.row b{display:inline-block;width:105px}.close{float:right;border:0;background:none;font-size:18px}.maplibregl-ctrl-top-right{top:75px}</style></head><body><div id="map"></div><div class="panel"><h1>MAQUETA 3D SANTIAGO</h1><div class="sub">Revisión visual · límites oficiales</div><div class="search"><input id="q" placeholder="Buscar dirección"><button id="buscar">Buscar</button></div><div class="view"><button id="v2d">2D</button><button id="v3d">3D</button><button id="home">Inicio</button></div><button class="layers-btn" id="capas">☰ CAPAS</button><div class="layers" id="layerPanel"><label><input type="checkbox" id="edif" checked><span class="dot" style="background:#e76f51"></span>Edificaciones 3D</label><label><input type="checkbox" id="territorios" checked><span class="dot" style="background:#111827"></span>Territorios PLADECO · SHP</label><label><input type="checkbox" id="barrios" checked><span class="dot" style="background:#2563eb"></span>Barrios · SHP</label><label><input type="checkbox" id="vial" checked>Vialidad estructurante</label><label><input type="checkbox" id="verde" checked>Parques / áreas verdes</label><label><input type="checkbox" id="agua" checked>Río / agua</label></div></div><div class="legend"><b>ALTURA / PISOS · PRUEBA COLOR</b><div class="lg"><div><span class="sw" style="background:#f4d35e"></span>1 piso</div><div><span class="sw" style="background:#ee964b"></span>2–3</div><div><span class="sw" style="background:#f95738"></span>4–6</div><div><span class="sw" style="background:#c5283d"></span>7–10</div><div><span class="sw" style="background:#6a1b4d"></span>11+</div></div></div><div class="info" id="info"><button class="close" id="close">×</button><h3>Edificación</h3><div id="details"></div></div><script>const HOME={center:[-70.6506,-33.4489],zoom:13.7,pitch:54,bearing:-18};const map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/positron',...HOME,canvasContextAttributes:{antialias:true}});map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-right');function vis(ids,on){ids.forEach(id=>map.getLayer(id)&&map.setLayoutProperty(id,'visibility',on?'visible':'none'))}map.on('load',()=>{let firstLabel;for(const l of map.getStyle().layers||[]){if(l.type==='symbol'&&l.layout&&l.layout['text-field']){firstLabel=l.id;break}}if(!map.getSource('ofm'))map.addSource('ofm',{url:'https://tiles.openfreemap.org/planet',type:'vector'});map.addLayer({id:'parques',source:'ofm','source-layer':'park',type:'fill',paint:{'fill-color':'#8fcf8b','fill-opacity':.58}},firstLabel);map.addLayer({id:'agua',source:'ofm','source-layer':'water',type:'fill',paint:{'fill-color':'#72b7d2','fill-opacity':.78}},firstLabel);map.addLayer({id:'vial',source:'ofm','source-layer':'transportation',type:'line',filter:['match',['get','class'],['trunk','primary','secondary'],true,false],paint:{'line-color':'#4b5563','line-width':['interpolate',['linear'],['zoom'],11,1.2,16,5],'line-opacity':.7}},firstLabel);map.addSource('barrios-shp',{type:'geojson',data:'data/barrios_oficial.geojson'});map.addSource('territorios-shp',{type:'geojson',data:'data/territorios_oficial.geojson'});map.addLayer({id:'ter-line',type:'line',source:'territorios-shp',paint:{'line-color':'#111827','line-width':4,'line-opacity':.9}});map.addLayer({id:'ter-label',type:'symbol',source:'territorios-shp',minzoom:11,layout:{'text-field':['get','TERRITORIO'],'text-size':15,'text-font':['Noto Sans Bold']},paint:{'text-color':'#111827','text-halo-color':'#fff','text-halo-width':2}});map.addLayer({id:'bar-line',type:'line',source:'barrios-shp',paint:{'line-color':'#2563eb','line-width':2,'line-opacity':.9}});map.addLayer({id:'bar-label',type:'symbol',source:'barrios-shp',minzoom:12.5,layout:{'text-field':['get','BARRIO'],'text-size':12,'text-font':['Noto Sans Bold']},paint:{'text-color':'#1e40af','text-halo-color':'#fff','text-halo-width':1.5}});map.addLayer({id:'edificios-3d',source:'ofm','source-layer':'building',type:'fill-extrusion',minzoom:14.1,paint:{'fill-extrusion-color':['step',['coalesce',['get','render_height'],3],'#f4d35e',6,'#ee964b',12,'#f95738',21,'#c5283d',33,'#6a1b4d'],'fill-extrusion-height':['coalesce',['get','render_height'],3],'fill-extrusion-base':['coalesce',['get','render_min_height'],0],'fill-extrusion-opacity':.9}},firstLabel);map.on('click','edificios-3d',e=>{const p=e.features[0].properties||{},h=Math.round(Number(p.render_height||0)),pisos=Math.max(1,Math.round(h/3));details.innerHTML=`<div class="row"><b>PISOS EST.</b>${pisos}</div><div class="row"><b>ALTURA</b>${h} m</div><div class="row"><b>FUENTE</b>Referencia visual (pendiente reemplazo SII)</div>`;info.classList.add('show')})});capas.onclick=()=>layerPanel.classList.toggle('open');edif.onchange=()=>vis(['edificios-3d'],edif.checked);territorios.onchange=()=>vis(['ter-line','ter-label'],territorios.checked);barrios.onchange=()=>vis(['bar-line','bar-label'],barrios.checked);vial.onchange=()=>vis(['vial'],vial.checked);verde.onchange=()=>vis(['parques'],verde.checked);agua.onchange=()=>vis(['agua'],agua.checked);v2d.onclick=()=>map.easeTo({pitch:0,bearing:0});v3d.onclick=()=>map.easeTo({pitch:54,bearing:-18});home.onclick=()=>map.easeTo(HOME);close.onclick=()=>info.classList.remove('show');async function buscarDir(){const s=q.value.trim();if(!s)return;const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=cl&q='+encodeURIComponent(s+', Santiago, Chile'));const a=await r.json();if(a.length)map.flyTo({center:[+a[0].lon,+a[0].lat],zoom:17,pitch:56})}buscar.onclick=buscarDir;q.addEventListener('keydown',e=>e.key==='Enter'&&buscarDir());</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maqueta 3D Santiago</title>
+<link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+<script src="https://drive.usercontent.google.com/download?id=1SLituPvzLKh70fEuL2l7dtopCzE8ATuh&export=download&confirm=t"></script>
+<script src="https://drive.usercontent.google.com/download?id=1LraVCKUySsfFGDgJarIWz9h8VKZj4hMk&export=download&confirm=t"></script>
+<style>
+*{box-sizing:border-box}html,body,#map{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;color:#202124}#map{background:#eef1f3}
+.panel{position:absolute;z-index:5;top:14px;left:14px;width:345px;background:#fffffff5;border-radius:14px;box-shadow:0 4px 20px #0002;padding:14px}
+.panel h1{font-size:18px;margin:0}.sub{font-size:11px;color:#6b7280;margin:3px 0 10px}.search,.view{display:flex;gap:6px;margin-top:7px}
+.search input{flex:1;padding:9px;border:1px solid #d1d5db;border-radius:8px}.search button,.view button,.layers-btn,select{border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:8px;cursor:pointer}
+.view button{flex:1;font-weight:700}.layers-btn{width:100%;margin-top:8px;text-align:left;font-weight:700}.layers{display:none;border-top:1px solid #e5e7eb;margin-top:7px;padding-top:6px;max-height:340px;overflow:auto}.layers.open{display:block}.layers label{display:flex;gap:7px;align-items:center;font-size:12px;padding:4px}
+.mode{margin:8px 0 3px;font-size:11px}.mode select{width:100%;margin-top:4px}.dot{width:11px;height:11px;border-radius:2px;display:inline-block}
+.legend{position:absolute;z-index:4;left:14px;bottom:20px;background:#fffffff2;padding:10px 12px;border-radius:10px;box-shadow:0 2px 12px #0002;font-size:11px;max-width:360px}
+.lg{display:grid;grid-template-columns:auto auto;gap:4px 12px;margin-top:5px}.sw{width:20px;height:10px;display:inline-block;margin-right:5px}.note{color:#6b7280;margin-top:5px}
+.info{position:absolute;z-index:5;right:14px;top:14px;width:315px;background:#fffffff5;border-radius:12px;padding:13px;box-shadow:0 3px 18px #0002;display:none}.info.show{display:block}.row{font-size:12px;border-top:1px solid #e5e7eb;padding:6px 0}.row b{display:inline-block;width:105px}.close{float:right;border:0;background:none;font-size:18px}.status{font-size:11px;padding:7px 0;color:#555}.ok{color:#176b3a}.warn{color:#9a3412}.maplibregl-ctrl-top-right{top:75px}
+@media(max-width:720px){.panel{width:calc(100% - 28px)}.info{top:auto;bottom:14px;left:14px;right:14px;width:auto}.legend{display:none}}
+</style></head>
+<body><div id="map"></div>
+<div class="panel"><h1>MAQUETA 3D SANTIAGO</h1><div class="sub">SII real + relieve Cerro Santa Lucía</div>
+<div id="status" class="status">Cargando base SII…</div>
+<div class="search"><input id="q" placeholder="Buscar ROL o dirección"><button id="buscar">Buscar</button></div>
+<div class="view"><button id="v2d">2D</button><button id="v3d">3D</button><button id="home">Inicio</button></div>
+<div class="mode"><b>Color de edificios</b><select id="colorMode"><option value="pisos">Pisos</option><option value="destino">Destino</option><option value="estado">Estado de altura</option></select></div>
+<button class="layers-btn" id="capas">☰ CAPAS</button>
+<div class="layers" id="layerPanel">
+<label><input type="checkbox" id="edif" checked><span class="dot" style="background:#f46d43"></span>Edificaciones SII</label>
+<label><input type="checkbox" id="sinAlt" checked><span class="dot" style="background:#64748b"></span>Edificaciones sin altura SII</label>
+<label><input type="checkbox" id="relieve" checked><span class="dot" style="background:#8a735e"></span>Relieve Cerro Santa Lucía</label>
+<label><input type="checkbox" id="territorios" checked><span class="dot" style="background:#111827"></span>Territorios PLADECO · SHP</label>
+<label><input type="checkbox" id="barrios" checked><span class="dot" style="background:#2563eb"></span>Barrios · SHP</label>
+<label><input type="checkbox" id="vial" checked>Vialidad estructurante</label>
+<label><input type="checkbox" id="verde" checked>Parques / áreas verdes</label>
+<label><input type="checkbox" id="agua" checked>Río / agua</label>
+</div></div>
+
+<div class="legend" id="legend"><b>PISOS · SII</b><div class="lg">
+<div><span class="sw" style="background:#fee08b"></span>1 piso</div><div><span class="sw" style="background:#fdae61"></span>2–3</div>
+<div><span class="sw" style="background:#f46d43"></span>4–6</div><div><span class="sw" style="background:#d73027"></span>7–10</div>
+<div><span class="sw" style="background:#a50026"></span>11–20</div><div><span class="sw" style="background:#542788"></span>21+</div></div>
+<div class="note">Altura 3D = campo ALTURA_M de la base depurada SII. Santa Lucía usa elevación relativa del TIN.</div></div>
+
+<div class="info" id="info"><button class="close" id="close">×</button><h3>Edificación SII</h3><div id="details"></div></div>
+
+<script>
+const HOME={center:[-70.6506,-33.4489],zoom:13.7,pitch:54,bearing:-18};
+const PISO_COLOR=['step',['coalesce',['get','PISOS'],0],'#64748b',1,'#fee08b',2,'#fdae61',4,'#f46d43',7,'#d73027',11,'#a50026',21,'#542788'];
+const ESTADO_COLOR=['match',['coalesce',['get','ESTADO_ALT'],''],'ALTURA VALIDADA','#2563eb','SIN ALTURA DEFINIDA','#f59e0b','#64748b'];
+const DEST_COLOR=['match',['coalesce',['get','DESTINO'],''],
+'HABITACIONAL','#4f86c6','COMERCIO','#e76f51','INDUSTRIA','#6c757d','OFICINA','#8e7dbe',
+'EDUCACION Y CULTURA','#2a9d8f','BODEGA Y ALMACENAJE','#a47148','SITIO ERIAZO','#d9c7a3',
+'ESTACIONAMIENTO','#f4a261','SALUD','#e63946','DEPORTE Y RECREACION','#43aa8b','#9ca3af'];
+
+function b64buf(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a.buffer}
+async function gunzipGeoJSON(b64){const ds=new DecompressionStream('gzip');const stream=new Blob([b64buf(b64)]).stream().pipeThrough(ds);return JSON.parse(await new Response(stream).text())}
+
+if(window.SANTA_LUCIA_DEM){
+  maplibregl.addProtocol('sldem',async p=>{const key=p.url.replace('sldem://','');const b=window.SANTA_LUCIA_DEM[key];if(!b)throw new Error('DEM tile fuera de cobertura');return{data:b64buf(b)}});
+}
+
+const map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/positron',...HOME,canvasContextAttributes:{antialias:true},maxPitch:80});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-right');
+function vis(ids,on){ids.forEach(id=>map.getLayer(id)&&map.setLayoutProperty(id,'visibility',on?'visible':'none'))}
+
+async function loadSII(){
+ if(!window.MAQUETA_SII_GZIP_B64) throw new Error('No se pudo leer el archivo SII');
+ return gunzipGeoJSON(window.MAQUETA_SII_GZIP_B64);
+}
+
+function popup(p){
+ const pisos=(p.PISOS==null||p.PISOS==='')?'Sin dato':p.PISOS;
+ const alt=(p.ALTURA_M==null||p.ALTURA_M==='')?'Sin dato':Number(p.ALTURA_M).toFixed(0)+' m';
+ details.innerHTML=[
+ ['ROL',p.ROL],['DIRECCIÓN',p.DIRECCION],['DESTINO',p.DESTINO],['PISOS',pisos],['ALTURA 3D',alt],['FUENTE',p.FUENTE_PISOS],['ESTADO',p.ESTADO_ALT]
+ ].map(x=>`<div class="row"><b>${x[0]}</b>${x[1]??'Sin dato'}</div>`).join('');
+ info.classList.add('show');
+}
+function setColor(mode){
+ const expr=mode==='destino'?DEST_COLOR:mode==='estado'?ESTADO_COLOR:PISO_COLOR;
+ if(map.getLayer('sii-3d'))map.setPaintProperty('sii-3d','fill-extrusion-color',expr);
+ legend.innerHTML=mode==='pisos'?`<b>PISOS · SII</b><div class="lg"><div><span class="sw" style="background:#fee08b"></span>1 piso</div><div><span class="sw" style="background:#fdae61"></span>2–3</div><div><span class="sw" style="background:#f46d43"></span>4–6</div><div><span class="sw" style="background:#d73027"></span>7–10</div><div><span class="sw" style="background:#a50026"></span>11–20</div><div><span class="sw" style="background:#542788"></span>21+</div></div><div class="note">Altura = ALTURA_M SII.</div>`:
+ mode==='estado'?`<b>ESTADO DE ALTURA</b><div class="lg"><div><span class="sw" style="background:#2563eb"></span>Validada</div><div><span class="sw" style="background:#f59e0b"></span>Sin altura definida</div><div><span class="sw" style="background:#64748b"></span>Sin altura</div></div>`:
+ `<b>DESTINO SII</b><div class="note">Habitacional, comercio, industria, oficina, educación, bodega, sitio eriazo, estacionamiento, salud y otros.</div>`;
+}
+
+map.on('load',async()=>{
+ let firstLabel;for(const l of map.getStyle().layers||[]){if(l.type==='symbol'&&l.layout&&l.layout['text-field']){firstLabel=l.id;break}}
+ if(!map.getSource('ofm'))map.addSource('ofm',{url:'https://tiles.openfreemap.org/planet',type:'vector'});
+ map.addLayer({id:'parques',source:'ofm','source-layer':'park',type:'fill',paint:{'fill-color':'#8fcf8b','fill-opacity':.58}},firstLabel);
+ map.addLayer({id:'agua',source:'ofm','source-layer':'water',type:'fill',paint:{'fill-color':'#72b7d2','fill-opacity':.78}},firstLabel);
+ map.addLayer({id:'vial',source:'ofm','source-layer':'transportation',type:'line',filter:['match',['get','class'],['trunk','primary','secondary'],true,false],paint:{'line-color':'#4b5563','line-width':['interpolate',['linear'],['zoom'],11,1.3,16,5.5],'line-opacity':.76}},firstLabel);
+
+ map.addSource('barrios-shp',{type:'geojson',data:'data/barrios_oficial.geojson'});
+ map.addSource('territorios-shp',{type:'geojson',data:'data/territorios_oficial.geojson'});
+ map.addLayer({id:'ter-line',type:'line',source:'territorios-shp',paint:{'line-color':'#111827','line-width':['interpolate',['linear'],['zoom'],11,2.5,16,4.5],'line-opacity':.9}});
+ map.addLayer({id:'ter-label',type:'symbol',source:'territorios-shp',minzoom:11,layout:{'text-field':['get','TERRITORIO'],'text-size':['interpolate',['linear'],['zoom'],11,12,15,16],'text-font':['Noto Sans Bold']},paint:{'text-color':'#111827','text-halo-color':'#fff','text-halo-width':2}});
+ map.addLayer({id:'bar-line',type:'line',source:'barrios-shp',paint:{'line-color':'#2563eb','line-width':['interpolate',['linear'],['zoom'],11,1.2,16,2.4],'line-opacity':.9}});
+ map.addLayer({id:'bar-label',type:'symbol',source:'barrios-shp',minzoom:12.4,layout:{'text-field':['get','BARRIO'],'text-size':['interpolate',['linear'],['zoom'],12.4,10,16,14],'text-font':['Noto Sans Bold']},paint:{'text-color':'#1e40af','text-halo-color':'#fff','text-halo-width':1.5}});
+
+ if(window.SANTA_LUCIA_DEM){
+   map.addSource('santa-lucia-dem',{type:'raster-dem',tiles:['sldem://{z}/{x}/{y}'],tileSize:256,minzoom:13,maxzoom:15,bounds:[-70.653076,-33.449777,-70.64209,-33.431441],encoding:'mapbox'});
+   map.setTerrain({source:'santa-lucia-dem',exaggeration:1.25});
+   map.addLayer({id:'santa-lucia-hillshade',type:'hillshade',source:'santa-lucia-dem',paint:{'hillshade-exaggeration':0.35,'hillshade-shadow-color':'#6b5b4b','hillshade-highlight-color':'#ffffff','hillshade-accent-color':'#8a735e'}},firstLabel);
+ }
+
+ try{
+   const data=await loadSII();
+   map.addSource('sii',{type:'geojson',data});
+   map.addLayer({id:'sii-foot',type:'fill',source:'sii',filter:['all',['<=',['coalesce',['get','PISOS'],0],0]],paint:{'fill-color':'#64748b','fill-opacity':.72,'fill-outline-color':'#475569'}},firstLabel);
+   map.addLayer({id:'sii-3d',type:'fill-extrusion',source:'sii',filter:['>',['coalesce',['get','PISOS'],0],0],minzoom:12.5,paint:{'fill-extrusion-color':PISO_COLOR,'fill-extrusion-height':['coalesce',['get','ALTURA_M'],3],'fill-extrusion-base':0,'fill-extrusion-opacity':.9}},firstLabel);
+   map.on('click','sii-3d',e=>popup(e.features[0].properties));map.on('click','sii-foot',e=>popup(e.features[0].properties));
+   ['sii-3d','sii-foot'].forEach(id=>{map.on('mouseenter',id,()=>map.getCanvas().style.cursor='pointer');map.on('mouseleave',id,()=>map.getCanvas().style.cursor='')});
+   status.textContent=`SII cargado: ${data.features.length.toLocaleString('es-CL')} geometrías`;status.className='status ok';
+ }catch(e){status.textContent='No se pudo cargar SII: '+e.message;status.className='status warn'}
+});
+
+capas.onclick=()=>layerPanel.classList.toggle('open');
+edif.onchange=()=>vis(['sii-3d'],edif.checked);sinAlt.onchange=()=>vis(['sii-foot'],sinAlt.checked);
+relieve.onchange=()=>{if(relieve.checked){map.setTerrain({source:'santa-lucia-dem',exaggeration:1.25});vis(['santa-lucia-hillshade'],true)}else{map.setTerrain(null);vis(['santa-lucia-hillshade'],false)}};
+territorios.onchange=()=>vis(['ter-line','ter-label'],territorios.checked);barrios.onchange=()=>vis(['bar-line','bar-label'],barrios.checked);
+vial.onchange=()=>vis(['vial'],vial.checked);verde.onchange=()=>vis(['parques'],verde.checked);agua.onchange=()=>vis(['agua'],agua.checked);
+colorMode.onchange=()=>setColor(colorMode.value);v2d.onclick=()=>map.easeTo({pitch:0,bearing:0});v3d.onclick=()=>map.easeTo({pitch:54,bearing:-18});home.onclick=()=>map.easeTo(HOME);close.onclick=()=>info.classList.remove('show');
+
+async function buscarSII(){
+ const s=q.value.trim().toUpperCase();if(!s)return;
+ const fs=map.getSource('sii')?map.querySourceFeatures('sii'):[];
+ const f=fs.find(x=>String(x.properties.ROL||'').toUpperCase().includes(s)||String(x.properties.DIRECCION||'').toUpperCase().includes(s));
+ if(f){const b=new maplibregl.LngLatBounds();const walk=a=>{if(typeof a[0]==='number')b.extend(a);else a.forEach(walk)};walk(f.geometry.coordinates);map.fitBounds(b,{padding:120,maxZoom:17,pitch:54});popup(f.properties);return}
+ const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=cl&q='+encodeURIComponent(q.value+', Santiago, Chile'));const a=await r.json();if(a.length)map.flyTo({center:[+a[0].lon,+a[0].lat],zoom:17,pitch:54});
+}
+buscar.onclick=buscarSII;q.addEventListener('keydown',e=>e.key==='Enter'&&buscarSII());
+</script></body></html>
