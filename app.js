@@ -1,5 +1,5 @@
 const $=id=>document.getElementById(id);
-const palette=[{name:'Muy bajo',label:'0–<12,5',color:'#285784'},{name:'Bajo',label:'12,5–37,5',color:'#49a9a7'},{name:'Medio',label:'>37,5–<75',color:'#d4aa3d'},{name:'Alto',label:'75–100',color:'#e96c57'}];
+const palette=[{name:'Muy bajo',label:'0–<12,5',color:'#285784'},{name:'Bajo',label:'12,5–<37,5',color:'#49a9a7'},{name:'Medio',label:'37,5–<75',color:'#d4aa3d'},{name:'Alto',label:'75–100',color:'#e96c57'}];
 const layerFiles={manzana:['manzanas/NORPONIENTE.geojson','manzanas/SURPONIENTE.geojson','manzanas/NORORIENTE.geojson','manzanas/CENTRO_ORIENTE.geojson','manzanas/CENTRO_PONIENTE.geojson','manzanas/SURORIENTE.geojson'],barrio:['barrios.geojson'],territorio:['territorios.geojson'],comuna:['comuna.geojson']};
 const levelFields={manzana:'COD_MZN',barrio:'BARRIO',territorio:'TERRITORIO',comuna:'COMUNA'};
 const inverseCodes=new Set(['IAT_1','IAT_7','IUT_3','IUT_7']);
@@ -40,7 +40,7 @@ const norm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUp
 const fmt=v=>Number.isFinite(v)?v.toLocaleString('es-CL',{minimumFractionDigits:2,maximumFractionDigits:2}):'–';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const indicatorByCode=code=>state.db.indicadores.find(i=>i.codigo===code);
-function rangeFor(v){if(!Number.isFinite(v))return null;if(v<.125)return palette[0];if(v<=.375)return palette[1];if(v<.75)return palette[2];return palette[3]}
+function rangeFor(v){if(!Number.isFinite(v))return null;if(v<.125)return palette[0];if(v<.375)return palette[1];if(v<.75)return palette[2];return palette[3]}
 const rowFor=(name,year)=>state.db.series.find(r=>r.anio===year&&norm(r.nombre)===norm(name));
 const publishable=(code,year)=>Boolean(indicatorByCode(code)?.[`publicado_${year}`]);
 const indicatorDescription=i=>i.descripcion||`Mide territorialmente ${String(i.indicador).toLowerCase()} y expresa el resultado normalizado en una escala de 0 a 1. Unidad de referencia: ${i.unidad||'no especificada'}.`;
