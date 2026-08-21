@@ -1,74 +1,27 @@
 (() => {
-  const waitForMap = () => {
-    if (typeof map === 'undefined' || !map || typeof state === 'undefined' || !state?.layers?.barrio || !state?.layers?.territorio) {
-      setTimeout(waitForMap, 250);
+  function install() {
+    const m = window.map;
+    const s = window.state;
+    if (!m || !s || !s.layers || !s.layers.barrio || !s.layers.territorio || !m.isStyleLoaded()) {
+      setTimeout(install, 300);
       return;
     }
+    if (document.getElementById('gi-layer-box')) return;
 
-    const addReferenceLayers = () => {
-      if (!map.getSource('limites-barrios')) {
-        map.addSource('limites-barrios', { type: 'geojson', data: state.layers.barrio });
-        map.addLayer({
-          id: 'limites-barrios-line',
-          type: 'line',
-          source: 'limites-barrios',
-          layout: { visibility: 'visible' },
-          paint: {
-            'line-color': '#111827',
-            'line-width': 1.35,
-            'line-opacity': 0.95
-          }
-        });
-      }
+    if (!m.getSource('limites-barrios')) m.addSource('limites-barrios', {type:'geojson', data:s.layers.barrio});
+    if (!m.getLayer('limites-barrios-line')) m.addLayer({id:'limites-barrios-line',type:'line',source:'limites-barrios',layout:{visibility:'visible'},paint:{'line-color':'#101820','line-width':1.5,'line-opacity':0.95}});
+    if (!m.getSource('limites-territorios')) m.addSource('limites-territorios', {type:'geojson', data:s.layers.territorio});
+    if (!m.getLayer('limites-territorios-line')) m.addLayer({id:'limites-territorios-line',type:'line',source:'limites-territorios',layout:{visibility:'none'},paint:{'line-color':'#ffffff','line-width':3.5,'line-opacity':1}});
 
-      if (!map.getSource('limites-territorios')) {
-        map.addSource('limites-territorios', { type: 'geojson', data: state.layers.territorio });
-        map.addLayer({
-          id: 'limites-territorios-line',
-          type: 'line',
-          source: 'limites-territorios',
-          layout: { visibility: 'none' },
-          paint: {
-            'line-color': '#ffffff',
-            'line-width': 3,
-            'line-opacity': 0.95
-          }
-        });
-      }
-    };
-
-    class ReferenceLayerControl {
-      onAdd() {
-        const container = document.createElement('div');
-        container.className = 'maplibregl-ctrl maplibregl-ctrl-group gi-layer-control';
-        container.innerHTML = `
-          <div class="gi-layer-title">Límites</div>
-          <label><input type="checkbox" data-layer="limites-barrios-line" checked> Barrios</label>
-          <label><input type="checkbox" data-layer="limites-territorios-line"> Territorios</label>
-        `;
-        container.querySelectorAll('input[data-layer]').forEach(input => {
-          input.addEventListener('change', () => {
-            const layerId = input.dataset.layer;
-            if (map.getLayer(layerId)) {
-              map.setLayoutProperty(layerId, 'visibility', input.checked ? 'visible' : 'none');
-            }
-          });
-        });
-        return container;
-      }
-      onRemove() {}
-    }
-
-    if (map.loaded()) {
-      addReferenceLayers();
-      map.addControl(new ReferenceLayerControl(), 'top-left');
-    } else {
-      map.once('load', () => {
-        addReferenceLayers();
-        map.addControl(new ReferenceLayerControl(), 'top-left');
-      });
-    }
-  };
-
-  waitForMap();
+    const host = document.querySelector('.map-panel');
+    if (!host) return;
+    const box = document.createElement('div');
+    box.id = 'gi-layer-box';
+    box.className = 'gi-layer-box';
+    box.innerHTML = '<strong>Capas</strong><label><input id="gi-barrios" type="checkbox" checked> Límites Barrios</label><label><input id="gi-territorios" type="checkbox"> Límites Territorios</label>';
+    host.appendChild(box);
+    box.querySelector('#gi-barrios').addEventListener('change', e => m.setLayoutProperty('limites-barrios-line','visibility',e.target.checked?'visible':'none'));
+    box.querySelector('#gi-territorios').addEventListener('change', e => m.setLayoutProperty('limites-territorios-line','visibility',e.target.checked?'visible':'none'));
+  }
+  window.addEventListener('load', () => setTimeout(install, 300));
 })();
