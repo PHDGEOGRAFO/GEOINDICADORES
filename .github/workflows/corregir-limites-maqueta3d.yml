@@ -1,0 +1,105 @@
+name: Corregir limites Maqueta 3D
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  corregir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install shapely pyproj
+      - name: Validar y corregir geometrías
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from shapely.geometry import shape, mapping
+          from shapely.ops import unary_union, transform
+          from shapely.validation import make_valid
+          from pyproj import Transformer
+
+          base=Path("maqueta3d/data")
+          bp=base/"barrios_oficial.geojson"
+          tp=base/"territorios_oficial.geojson"
+          barrios=json.loads(bp.read_text(encoding="utf-8"))
+          territorios=json.loads(tp.read_text(encoding="utf-8"))
+
+          to_m=Transformer.from_crs(4326,32719,always_xy=True).transform
+          def clean(g):
+              g=make_valid(shape(g))
+              if g.geom_type=="GeometryCollection":
+                  g=unary_union([x for x in g.geoms if x.geom_type in ("Polygon","MultiPolygon")])
+              return g
+
+          bg=[clean(f["geometry"]) for f in barrios["features"]]
+          tg=[clean(f["geometry"]) for f in territorios["features"]]
+
+          def overlap_stats(gs):
+              pairs=[]; total=0.0
+              for i in range(len(gs)):
+                  for j in range(i+1,len(gs)):
+                      inter=gs[i].intersection(gs[j])
+                      if not inter.is_empty:
+                          a=transform(to_m,inter).area
+                          if a>0.01:
+                              pairs.append([i,j,a]); total+=a
+              return pairs,total
+
+          pre_b,pre_b_m2=overlap_stats(bg)
+          pre_t,pre_t_m2=overlap_stats(tg)
+
+          # Partición topológica: cada área queda asignada una sola vez.
+          fixed=[]; occupied=None
+          for g in bg:
+              x=g if occupied is None else g.difference(occupied)
+              x=make_valid(x)
+              fixed.append(x)
+              occupied=x if occupied is None else unary_union([occupied,x])
+
+          # Asigna cada barrio al territorio original con mayor superficie coincidente.
+          groups={i:[] for i in range(len(tg))}
+          assignments=[]
+          for bi,g in enumerate(fixed):
+              areas=[transform(to_m,g.intersection(t)).area for t in tg]
+              ti=max(range(len(areas)),key=areas.__getitem__)
+              groups[ti].append(g); assignments.append(ti)
+
+          fixed_t=[unary_union(groups[i]) if groups[i] else tg[i].difference(unary_union([x for k,x in enumerate(tg) if k<i])) for i in range(len(tg))]
+          fixed_t=[make_valid(x) for x in fixed_t]
+
+          post_b,post_b_m2=overlap_stats(fixed)
+          post_t,post_t_m2=overlap_stats(fixed_t)
+
+          for f,g in zip(barrios["features"],fixed): f["geometry"]=mapping(g)
+          for f,g in zip(territorios["features"],fixed_t): f["geometry"]=mapping(g)
+          bp.write_text(json.dumps(barrios,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
+          tp.write_text(json.dumps(territorios,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
+
+          report={
+            "barrios":len(fixed),"territorios":len(fixed_t),
+            "superposicion_barrios_antes_m2":round(pre_b_m2,3),
+            "superposicion_barrios_despues_m2":round(post_b_m2,3),
+            "superposicion_territorios_antes_m2":round(pre_t_m2,3),
+            "superposicion_territorios_despues_m2":round(post_t_m2,3),
+            "pares_barrios_despues":len(post_b),
+            "pares_territorios_despues":len(post_t)
+          }
+          (base/"validacion_limites.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          if post_b_m2>0.01 or post_t_m2>0.01:
+              raise SystemExit("Persisten superposiciones")
+          PY
+      - name: Publicar límites corregidos
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add maqueta3d/data/barrios_oficial.geojson maqueta3d/data/territorios_oficial.geojson maqueta3d/data/validacion_limites.json
+          git diff --cached --quiet || git commit -m "Corregir superposiciones de barrios y territorios"
+          git push
