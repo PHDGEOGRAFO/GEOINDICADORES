@@ -27,8 +27,9 @@ jobs:
 
           base=Path("maqueta3d/data")
           bp=base/"barrios_oficial.geojson"
+          sourcep=base/"barrios_fuente.geojson"
           tp=base/"territorios_oficial.geojson"
-          barrios=json.loads(bp.read_text(encoding="utf-8"))
+          barrios=json.loads(sourcep.read_text(encoding="utf-8"))
           territorios=json.loads(tp.read_text(encoding="utf-8"))
 
           to_m=Transformer.from_crs(4326,32719,always_xy=True).transform
@@ -38,7 +39,14 @@ jobs:
                   g=unary_union([x for x in g.geoms if x.geom_type in ("Polygon","MultiPolygon")])
               return g
 
-          bg=[clean(f["geometry"]) for f in barrios["features"]]
+          # Disuelve las geometrías duplicadas de un mismo barrio (San Eugenio).
+          dissolved={}
+          for f in barrios["features"]:
+              name=f["properties"]["BARRIO"]
+              g=clean(f["geometry"])
+              dissolved[name]=g if name not in dissolved else unary_union([dissolved[name],g])
+          barrios["features"]=[{"type":"Feature","properties":{"BARRIO":name},"geometry":mapping(g)} for name,g in dissolved.items()]
+          bg=[g for g in dissolved.values()]
           tg=[clean(f["geometry"]) for f in territorios["features"]]
 
           def overlap_stats(gs):
