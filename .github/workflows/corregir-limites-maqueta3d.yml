@@ -45,7 +45,8 @@ jobs:
               name=f["properties"]["BARRIO"]
               g=clean(f["geometry"])
               dissolved[name]=g if name not in dissolved else unary_union([dissolved[name],g])
-          barrios["features"]=[{"type":"Feature","properties":{"BARRIO":name},"geometry":mapping(g)} for name,g in dissolved.items()]
+          nombres_b={"SAN VICENTE":"San Vicente","SAN EUGENIO":"San Eugenio","RONDIZZONI":"Rondizzoni","YUNGAY":"Yungay","MEIGGS":"Meiggs","CLUB HIPICO":"Club Hípico","REPUBLICA":"República","EJERCITO":"Ejército","BRASIL":"Brasil","MATTA NORTE":"Matta Norte","BALMACEDA":"Balmaceda","PANAMA":"Panamá","DIEZ DE JULIO":"Diez de Julio","SANTA ISABEL":"Santa Isabel","SAN BORJA":"San Borja","PARQUE ALMAGRO":"Parque Almagro","HUEMUL":"Huemul","FRANKLIN":"Franklin","SIERRA BELLA":"Sierra Bella","VIEL":"Viel","MATTA SUR":"Matta Sur","BOGOTA":"Bogotá","SANTA ELENA":"Santa Elena","SANTA ANA":"Santa Ana","SANTA LUCIA - FORESTAL":"Santa Lucía - Forestal","CASCO HISTORICO":"Casco Histórico","PARQUE O'HIGGINS":"Parque O'Higgins"}
+          barrios["features"]=[{"type":"Feature","properties":{"COD_BARRIO":f"B{i:02d}","BARRIO":name,"NOMBRE_BARRIO":nombres_b.get(name,name),"ESTADO":"VALIDADO"},"geometry":mapping(g)} for i,(name,g) in enumerate(dissolved.items(),1)]
           bg=[g for g in dissolved.values()]
           tg=[clean(f["geometry"]) for f in territorios["features"]]
 
@@ -86,7 +87,11 @@ jobs:
           post_t,post_t_m2=overlap_stats(fixed_t)
 
           for f,g in zip(barrios["features"],fixed): f["geometry"]=mapping(g)
-          for f,g in zip(territorios["features"],fixed_t): f["geometry"]=mapping(g)
+          nombres_t={"NORORIENTE":"Nororiente","NORPONIENTE":"Norponiente","CENTRO ORIENTE":"Centro Oriente","CENTRO PONIENTE":"Centro Poniente","SUR ORIENTE":"Sur Oriente","SUR PONIENTE":"Sur Poniente"}
+          for i,(f,g) in enumerate(zip(territorios["features"],fixed_t),1):
+              name=f["properties"]["TERRITORIO"].strip().upper().replace("NOR ORIENTE","NORORIENTE").replace("NOR PONIENTE","NORPONIENTE")
+              f["properties"]={"COD_TERR":f"T{i:02d}","TERRITORIO":name,"NOMBRE_TERR":nombres_t.get(name,name),"ESTADO":"VALIDADO"}
+              f["geometry"]=mapping(g)
           bp.write_text(json.dumps(barrios,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
           tp.write_text(json.dumps(territorios,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
 
