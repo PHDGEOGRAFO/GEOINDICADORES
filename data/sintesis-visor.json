@@ -14,9 +14,10 @@
     {
       "codigo": "IAT_1",
       "indicador": "Microbasural",
-      "unidad": "n° de focos activos / barrio y n° de denuncias / barrio",
+      "unidad": "denuncias por 10.000 habitantes",
       "publicado_2025": true,
-      "publicado_2026": true
+      "publicado_2026": true,
+      "descripcion": "Mide la concentración territorial de denuncias asociadas a microbasurales en relación con la población residente."
     },
     {
       "codigo": "IAT_2",
