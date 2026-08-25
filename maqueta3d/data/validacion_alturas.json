@@ -1,0 +1,19 @@
+{
+  "fecha": "2026-08-25",
+  "geometrias": 34957,
+  "altura_referencia_m_por_piso": 2.2,
+  "pisos_validos": 34352,
+  "sin_pisos_validos": 604,
+  "registros_anomalos": 1,
+  "maximo_pisos_valido": 36,
+  "anomalias": [
+    {
+      "rol": "00497-00444",
+      "direccion": "OLIVARES 1444 BD B 001",
+      "pisos_original": 200,
+      "accion": "Excluido del cálculo de altura"
+    }
+  ],
+  "archivo_carga": "sii_compact.geojson.gz",
+  "tamano_bytes": 1513553
+}
