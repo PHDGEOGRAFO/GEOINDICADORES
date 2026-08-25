@@ -1,7 +1,7 @@
 {
   "fecha": "2026-08-25",
   "geometrias": 34957,
-  "altura_referencia_m_por_piso": 2.2,
+  "altura_referencia_m_por_piso": 2.5,
   "pisos_validos": 34352,
   "sin_pisos_validos": 604,
   "registros_anomalos": 1,
@@ -15,5 +15,6 @@
     }
   ],
   "archivo_carga": "sii_compact.geojson.gz",
-  "tamano_bytes": 1513553
+  "tamano_bytes": 1513553,
+  "nota": "Altura estimada de visualización: 2,50 m por piso. Los datos anómalos se excluyen."
 }
