@@ -14,3 +14,9 @@
 .selected-indicator-summary span,.selected-indicator-summary small{display:block}
 .selected-indicator-summary em{color:#71dfe2;font-style:normal;font-weight:700;font-size:.64rem}
 .selected-indicator-summary small{margin-top:2px;color:#9bb2c5;line-height:1.3}
+
+/* Escala de valoración: separar claramente 0 y 1 de sus descripciones */
+.scale-direction{display:grid;grid-template-columns:max-content minmax(0,1fr) max-content minmax(0,1fr) max-content;align-items:center;column-gap:6px;width:100%;font-size:.68rem;line-height:1.25}
+.scale-direction span{text-align:center;min-width:0;color:#dbeaf4}
+.scale-direction i{font-style:normal;color:#20c6c7;text-align:center}
+.scale-direction b{color:#f4f8fc;white-space:nowrap}
