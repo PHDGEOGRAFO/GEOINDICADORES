@@ -4,8 +4,9 @@ const layerFiles={manzana:['manzanas/NORPONIENTE.geojson','manzanas/SURPONIENTE.
 const levelFields={manzana:'COD_MZN',barrio:'BARRIO',territorio:'TERRITORIO',comuna:'COMUNA'};
 const barrioTerritorio={
 'SAN VICENTE':'SURPONIENTE','SAN EUGENIO':'SURPONIENTE','RONDIZZONI':'SURPONIENTE','YUNGAY':'NORPONIENTE','MEIGGS':'CENTRO PONIENTE','CLUB HIPICO':'SURPONIENTE','REPUBLICA':'CENTRO PONIENTE','EJERCITO':'CENTRO PONIENTE','BRASIL':'NORPONIENTE','MATTA NORTE':'CENTRO ORIENTE','BALMACEDA':'NORPONIENTE','PANAMA':'NORPONIENTE','DIEZ DE JULIO':'CENTRO ORIENTE','SANTA ISABEL':'CENTRO ORIENTE','SAN BORJA':'CENTRO ORIENTE','PARQUE ALMAGRO':'CENTRO ORIENTE','HUEMUL':'SURORIENTE','FRANKLIN':'SURORIENTE','SIERRA BELLA':'SURORIENTE','VIEL':'SURORIENTE','MATTA SUR':'SURORIENTE','BOGOTA':'SURORIENTE','SANTA ELENA':'SURORIENTE','SANTA ANA':'NORORIENTE','SANTA LUCIA FORESTAL':'NORORIENTE','CENTRO HISTORICO':'NORORIENTE',"PARQUE O'HIGGINS":'SURPONIENTE'};
-const territorioBarrio=name=>barrioTerritorio[norm(name)]||null;
-const territorioDePropiedades=p=>{const propio=String(p?.TERRITORIO??'').trim();return propio&&!['-','–','—','SIN DATO','S/D','NULL'].includes(norm(propio))?propio:territorioBarrio(p?.BARRIO)};
+const territorioBarrio=name=>{const buscado=norm(name);return Object.entries(barrioTerritorio).find(([barrio])=>norm(barrio)===buscado)?.[1]||null};
+const valorPropiedad=(p,campo)=>p?.[campo]??Object.entries(p||{}).find(([clave])=>norm(clave)===norm(campo))?.[1];
+const territorioDePropiedades=p=>{const propio=String(valorPropiedad(p,'TERRITORIO')??'').trim(),barrio=valorPropiedad(p,'BARRIO');return propio&&!['-','–','—','SIN DATO','S/D','NULL'].includes(norm(propio))?propio:territorioBarrio(barrio)};
 const inverseCodes=new Set(['IAT_1','IAT_7','IUT_3','IUT_7']);
 const strategicLinks={
   IAT_1:{dimension:'AMBIENTAL',eje:'GESTIÓN INTEGRAL DE RESIDUOS',componentes:['ASEO Y LIMPIEZA URBANA']},
