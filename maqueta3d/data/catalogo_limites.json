@@ -1,0 +1,33 @@
+{
+  "version": "2026-08-25",
+  "uso": "Límites oficiales optimizados para Maqueta 3D",
+  "archivos": {
+    "fuente_barrios": {
+      "archivo": "barrios_fuente.geojson",
+      "estado": "RESPALDO - no cargar en visor",
+      "rasgos": 28,
+      "nota": "San Eugenio está compuesto por dos polígonos"
+    },
+    "barrios": {
+      "archivo": "barrios_oficial.geojson",
+      "estado": "PUBLICACIÓN",
+      "rasgos": 27,
+      "clave": "COD_BARRIO",
+      "nombre_union": "BARRIO",
+      "nombre_visual": "NOMBRE_BARRIO"
+    },
+    "territorios": {
+      "archivo": "territorios_oficial.geojson",
+      "estado": "PUBLICACIÓN",
+      "rasgos": 6,
+      "clave": "COD_TERR",
+      "nombre_union": "TERRITORIO",
+      "nombre_visual": "NOMBRE_TERR"
+    }
+  },
+  "validacion": {
+    "superposicion_barrios_m2": 0,
+    "superposicion_territorios_m2": 0,
+    "campos_vacios": 0
+  }
+}
