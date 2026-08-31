@@ -1,0 +1,40 @@
+{
+  "version": "0.9.10",
+  "crs_web": "EPSG:4326",
+  "regla": "Los archivos limite_* son la fuente cartografica canonica. Los archivos barrios.geojson, territorios.geojson y comuna.geojson son alias compatibles para el visor principal y no deben construirse a partir de agrupaciones de manzanas.",
+  "capas": {
+    "barrio": {
+      "canonico": "data/limite_barrios.geojson",
+      "alias_visor": "data/barrios.geojson",
+      "fuente_original": "LIMITE_BARRIOS.shp",
+      "tipo": "limite_oficial"
+    },
+    "territorio": {
+      "canonico": "data/limite_territorios_pladeco.geojson",
+      "alias_visor": "data/territorios.geojson",
+      "fuente_original": "LIMITE-TERRITORIOS_PLADECO.shp",
+      "tipo": "limite_oficial",
+      "unidades": 6
+    },
+    "comuna": {
+      "canonico": "data/limite_comuna.geojson",
+      "alias_visor": "data/comuna.geojson",
+      "fuente_original": "LIMITE_COMUNA.shp",
+      "tipo": "limite_oficial",
+      "unidades": 1
+    },
+    "manzana": {
+      "canonico": "data/limite_manzana_censal.geojson",
+      "fuente_original": "LIMITE_MANZANA_CENSAL.shp",
+      "tipo": "limite_oficial",
+      "estado": "pendiente_publicacion"
+    },
+    "maestro_manzana_barrio_territorio": {
+      "canonico": "data/manzana_barrio_territorio.geojson",
+      "fuente_original": "STGO_MZ_BARRIO-TERRITORIO.shp",
+      "tipo": "maestro_relacional",
+      "es_limite": false,
+      "estado": "pendiente_publicacion"
+    }
+  }
+}
