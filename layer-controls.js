@@ -1,4 +1,45 @@
 (() => {
+  async function cargarIndicadoresManzana(){
+    if(typeof state==='undefined'||state.manzanaDB)return;
+    try{
+      const response=await fetch('data/manzana-indicadores.json.gz?v=1.0.0');
+      if(!response.ok)throw new Error('HTTP '+response.status);
+      let text;
+      if('DecompressionStream' in window){
+        const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
+        text=await new Response(stream).text();
+      }else{
+        throw new Error('Navegador sin soporte de descompresión GZIP');
+      }
+      const db=JSON.parse(text);
+      state.manzanaDB=db;
+      const featureValueOriginal=featureValue;
+      featureValue=function(feature,scale=state.scale,year=state.year){
+        if(scale!=='manzana')return featureValueOriginal(feature,scale,year);
+        if(!state.selectedIndicators.length||!feature)return null;
+        const yearData=db.indicadores?.[String(year)]||{};
+        const cod=String(feature.properties?.COD_MZN??'');
+        const vals=state.selectedIndicators.map(code=>{
+          const value=yearData?.[code]?.[cod];
+          return value===null||value===undefined||value===''?NaN:Number(value);
+        }).filter(Number.isFinite);
+        return vals.length===state.selectedIndicators.length&&vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+      };
+      const codesAvailableOriginal=codesAvailable;
+      codesAvailable=function(){
+        const base=codesAvailableOriginal();
+        if(state.scale!=='manzana')return base;
+        const current=db.indicadores?.[String(state.year)]||{};
+        const compare=state.compareYear?db.indicadores?.[String(state.compareYear)]||{}:{};
+        return base.filter(i=>Boolean(current[i.codigo]||compare[i.codigo]));
+      };
+      const scaleSelect=document.getElementById('scaleSelect');
+      const option=scaleSelect?.querySelector('option[value="manzana"]');
+      if(option){option.disabled=false;option.textContent='Manzana censal';}
+    }catch(e){
+      console.warn('No fue posible habilitar resultados por manzana',e);
+    }
+  }
   async function install(){
     if(typeof map==='undefined'||!map||!map.isStyleLoaded()){setTimeout(install,300);return;}
     if(document.getElementById('gi-layer-box'))return;
@@ -27,6 +68,7 @@
         }
         add('limites-manzanas',mz,{'line-color':'#8ca0b3','line-width':0.65,'line-opacity':0.65},false);
       }catch(e){console.warn('No fue posible cargar límites de manzana',e);}
+      await cargarIndicadoresManzana();
       const host=document.querySelector('.map-panel'),box=document.createElement('div');box.id='gi-layer-box';box.className='gi-layer-box';box.innerHTML='<strong>Capas permanentes del mapa</strong><label><input data-layer="limites-barrios-line" type="checkbox" checked> Barrios</label><label><input data-layer="limites-territorios-line" type="checkbox"> Territorios</label><label><input data-layer="limite-comunal-line" type="checkbox"> Comuna</label><label><input data-layer="limites-manzanas-line" type="checkbox"> Manzanas</label>';host.appendChild(box);
       box.querySelectorAll('input[data-layer]').forEach(input=>input.addEventListener('change',()=>{if(map.getLayer(input.dataset.layer))map.setLayoutProperty(input.dataset.layer,'visibility',input.checked?'visible':'none');else input.checked=false;}));
       if(typeof refresh==='function')refresh();else if(typeof refreshMap==='function')refreshMap();
