@@ -2,6 +2,27 @@
   "fuente": "Cálculos territoriales recalculados desde valores brutos",
   "criterio": "El valor real territorial tiene prioridad. El promedio normalizado de barrios es solo referencia secundaria.",
   "regla_valoracion": "0 = condición más desfavorable; 1 = condición óptima o más favorable",
-  "estado": "estructura preparada; incorporar únicamente resultados territoriales respaldados",
-  "series": []
+  "estado": "IUT_7 territorial 2026 incorporado; continuar cargando únicamente resultados territoriales respaldados",
+  "metadatos": {
+    "IUT_7_2026": {
+      "indicador": "Hacinamiento",
+      "fuente": "INE Censo 2024 · 13101_manzana_entidad_CPV24.xlsx",
+      "numerador": "n_viv_hacinadas agregado desde manzana a territorio",
+      "denominador_operativo": "n_vp_ocupada agregado desde manzana a territorio",
+      "normalizacion": "Min–Max inversa entre 6 territorios",
+      "cobertura_numerador": 0.9871690428,
+      "hacinadas_territorializadas": 19388,
+      "hacinadas_comuna": 19640,
+      "residual_contenedor_comunal": 252,
+      "nota": "El residual corresponde a un contenedor comunal sin manzana y no se distribuye artificialmente entre territorios. El denominador operativo es el disponible en la base agregada manzana-entidad; el denominador censal estricto de viviendas con dato válido de dormitorios no está desagregado territorialmente en esta base pública."
+    }
+  },
+  "series": [
+    {"anio": 2026, "territorio": "NORORIENTE", "valores": {"IUT_7": 0.6761982604}, "valores_reales": {"IUT_7": 8.5123407398}},
+    {"anio": 2026, "territorio": "NORPONIENTE", "valores": {"IUT_7": 0.2278072963}, "valores_reales": {"IUT_7": 11.4471332520}},
+    {"anio": 2026, "territorio": "CENTRO ORIENTE", "valores": {"IUT_7": 0.8179688723}, "valores_reales": {"IUT_7": 7.5844287977}},
+    {"anio": 2026, "territorio": "CENTRO PONIENTE", "valores": {"IUT_7": 1.0}, "valores_reales": {"IUT_7": 6.3930051666}},
+    {"anio": 2026, "territorio": "SURORIENTE", "valores": {"IUT_7": 0.0}, "valores_reales": {"IUT_7": 12.9381694255}},
+    {"anio": 2026, "territorio": "SURPONIENTE", "valores": {"IUT_7": 0.5016382587}, "valores_reales": {"IUT_7": 9.6548646236}}
+  ]
 }
