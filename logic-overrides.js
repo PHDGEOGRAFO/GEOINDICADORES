@@ -7,15 +7,19 @@ inverseCodes.add('IAT_6');
 state.selectedDimensions=state.selectedDimensions.filter(d=>d!=='IIT');
 
 let territorialRealDb={series:[]};
-fetch('./data/territorial-real.json?v=1.0.0').then(r=>r.ok?r.json():{series:[]}).then(db=>{territorialRealDb=db||{series:[]};if(typeof refresh==='function')refresh()}).catch(()=>{});
+fetch('./data/territorial-real.json?v=1.0.1').then(r=>r.ok?r.json():{series:[]}).then(db=>{territorialRealDb=db||{series:[]};if(typeof refresh==='function')refresh()}).catch(()=>{});
 
-const sourceBarrioValue=barrioValue;
-const sourceFeatureValue=featureValue;
 const pressureCodesToFlip=new Set(['IAT_6']);
 
 function adjustedIndicatorValue(code,raw){
   if(!Number.isFinite(raw))return NaN;
   return pressureCodesToFlip.has(code)?1-raw:raw;
+}
+
+function uniformDirectionText(i){
+  if(i.codigo==='IAT_6')return 'Normalización inversa de presión: una mayor presión animal expresa mayor déficit relativo de área verde. El resultado se transforma para mantener la regla general: 0 = condición más desfavorable y 1 = condición óptima o más favorable.';
+  if(inverseCodes.has(i.codigo))return 'Normalización inversa: el fenómeno original representa una condición desfavorable cuando aumenta. El resultado ya está transformado para mantener la regla general: 0 = condición más desfavorable y 1 = condición óptima o más favorable.';
+  return 'Normalización directa: un resultado mayor representa una condición más favorable. Regla general: 0 = condición más desfavorable y 1 = condición óptima o más favorable.';
 }
 
 barrioValue=function(name,year){
@@ -52,13 +56,6 @@ featureValue=function(feature,scale=state.scale,year=state.year){
   const barrios=state.layers.barrio?.features||[];
   const vals=barrios.map(b=>barrioValue(b.properties.BARRIO,year)).filter(Number.isFinite);
   return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
-};
-
-const sourceDirectionText=directionText;
-directionText=function(i){
-  if(i.codigo==='IAT_6')return 'Normalización inversa de presión: una mayor presión animal expresa mayor déficit relativo de área verde. El resultado se transforma para mantener la regla general: 0 = condición más desfavorable y 1 = condición óptima o más favorable.';
-  if(inverseCodes.has(i.codigo))return 'Normalización inversa: el fenómeno original representa una condición desfavorable cuando aumenta. El resultado ya está transformado para mantener la regla general: 0 = condición más desfavorable y 1 = condición óptima o más favorable.';
-  return 'Normalización directa: un resultado mayor representa una condición más favorable. Regla general: 0 = condición más desfavorable y 1 = condición óptima o más favorable.';
 };
 
 const sourceRenderFormula=renderFormula;
@@ -114,6 +111,13 @@ analysisFor=function(feature){
     return `El territorio ${name} presenta un Valor real territorial de ${fmt(real)}, calculado a partir de los datos brutos agregados y normalizado a escala territorio. Como referencia secundaria, el promedio de los barrios que lo componen es ${fmt(avg)}${Number.isFinite(dif)?`; la diferencia entre ambas lecturas es ${dif>=0?'+':''}${fmt(dif)}`:''}. En todos los indicadores se mantiene la regla común 0 = condición más desfavorable y 1 = condición óptima o más favorable.`;
   }
   return `El territorio ${name} todavía no dispone de un Valor real territorial incorporado al visor. El promedio normalizado de sus barrios es ${fmt(avg)} y se muestra únicamente como referencia secundaria. No debe interpretarse como sustituto del cálculo territorial real.`;
+};
+
+const sourceOpenMethod=openMethod;
+openMethod=function(){
+  const selected=state.selectedIndicators.map(indicatorByCode).filter(Boolean),f=state.selectedFeature;
+  $('dialogContent').innerHTML=`<h2>Ficha de indicador${selected.length===1?'':'es'}</h2><p class="note">Regla común del visor: 0 = condición más desfavorable y 1 = condición óptima o más favorable.</p>${selected.map(i=>`<section class="indicator-sheet"><h3>${esc(i.codigo)} · ${esc(i.indicador)}</h3><p>${esc(indicatorDescription(i))}</p><dl class="dialog-grid"><dt>Unidad de referencia</dt><dd>${esc(i.unidad??'–')}</dd><dt>Sentido</dt><dd>${esc(uniformDirectionText(i))}</dd><dt>Disponibilidad</dt><dd>2025: ${i.publicado_2025?'sí':'no'} · 2026: ${i.publicado_2026?'sí':'no'}</dd></dl></section>`).join('')}${selected.length>1?`<h3>Resultado agrupado</h3><p>Promedio simple de ${selected.length} resultados normalizados: ${esc(selectedNames().join('; '))}. Si falta un componente, la unidad queda sin resultado.</p>`:''}<h3>Análisis de la selección territorial</h3><p>${esc(analysisFor(f))}</p>${reportActions()}`;
+  $('infoDialog').showModal();
 };
 
 const sourceOpenReport=openReport;
