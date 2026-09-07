@@ -2,7 +2,7 @@
   "fuente": "Cálculos territoriales recalculados desde valores brutos",
   "criterio": "El valor real territorial tiene prioridad. El promedio normalizado de barrios es solo referencia secundaria.",
   "regla_valoracion": "0 = condición más desfavorable; 1 = condición óptima o más favorable",
-  "estado": "IUT_7 territorial 2026 incorporado; continuar cargando únicamente resultados territoriales respaldados",
+  "estado": "IUT_7 e IAT_1 territorial 2026 incorporados; continuar cargando únicamente resultados territoriales respaldados",
   "metadatos": {
     "IUT_7_2026": {
       "indicador": "Hacinamiento",
@@ -15,14 +15,22 @@
       "hacinadas_comuna": 19640,
       "residual_contenedor_comunal": 252,
       "nota": "El residual corresponde a un contenedor comunal sin manzana y no se distribuye artificialmente entre territorios. El denominador operativo es el disponible en la base agregada manzana-entidad; el denominador censal estricto de viviendas con dato válido de dormitorios no está desagregado territorialmente en esta base pública."
+    },
+    "IAT_1_2026": {
+      "indicador": "Microbasurales / incivilidades en espacios públicos",
+      "fuente": "IAT_1_MICROBASURALES_CALCULO_2026_FUENTE2025",
+      "valor_real": "Frecuencia de registros/incivilidades agregada por territorio",
+      "normalizacion": "Min–Max inversa entre 6 territorios",
+      "sentido": "INVERSO",
+      "estado": "VALIDADO PARA SÍNTESIS 2026"
     }
   },
   "series": [
-    {"anio": 2026, "territorio": "NORORIENTE", "valores": {"IUT_7": 0.6761982604}, "valores_reales": {"IUT_7": 8.5123407398}},
-    {"anio": 2026, "territorio": "NORPONIENTE", "valores": {"IUT_7": 0.2278072963}, "valores_reales": {"IUT_7": 11.4471332520}},
-    {"anio": 2026, "territorio": "CENTRO ORIENTE", "valores": {"IUT_7": 0.8179688723}, "valores_reales": {"IUT_7": 7.5844287977}},
-    {"anio": 2026, "territorio": "CENTRO PONIENTE", "valores": {"IUT_7": 1.0}, "valores_reales": {"IUT_7": 6.3930051666}},
-    {"anio": 2026, "territorio": "SURORIENTE", "valores": {"IUT_7": 0.0}, "valores_reales": {"IUT_7": 12.9381694255}},
-    {"anio": 2026, "territorio": "SURPONIENTE", "valores": {"IUT_7": 0.5016382587}, "valores_reales": {"IUT_7": 9.6548646236}}
+    {"anio": 2026, "territorio": "NORORIENTE", "valores": {"IUT_7": 0.6761982604, "IAT_1": 0.2383177570}, "valores_reales": {"IUT_7": 8.5123407398, "IAT_1": 171}},
+    {"anio": 2026, "territorio": "NORPONIENTE", "valores": {"IUT_7": 0.2278072963, "IAT_1": 0.0}, "valores_reales": {"IUT_7": 11.4471332520, "IAT_1": 222}},
+    {"anio": 2026, "territorio": "CENTRO ORIENTE", "valores": {"IUT_7": 0.8179688723, "IAT_1": 0.6822429907}, "valores_reales": {"IUT_7": 7.5844287977, "IAT_1": 76}},
+    {"anio": 2026, "territorio": "CENTRO PONIENTE", "valores": {"IUT_7": 1.0, "IAT_1": 1.0}, "valores_reales": {"IUT_7": 6.3930051666, "IAT_1": 8}},
+    {"anio": 2026, "territorio": "SURORIENTE", "valores": {"IUT_7": 0.0, "IAT_1": 0.9953271028}, "valores_reales": {"IUT_7": 12.9381694255, "IAT_1": 9}},
+    {"anio": 2026, "territorio": "SURPONIENTE", "valores": {"IUT_7": 0.5016382587, "IAT_1": 0.9719626168}, "valores_reales": {"IUT_7": 9.6548646236, "IAT_1": 14}}
   ]
 }
