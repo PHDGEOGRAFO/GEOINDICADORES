@@ -1,36 +1,25 @@
 {
-  "fuente": "Cálculos territoriales recalculados desde valores brutos",
+  "fuente": "Cálculos territoriales reales desde respaldos oficiales por indicador",
   "criterio": "El valor real territorial tiene prioridad. El promedio normalizado de barrios es solo referencia secundaria.",
   "regla_valoracion": "0 = condición más desfavorable; 1 = condición óptima o más favorable",
-  "estado": "IUT_7 e IAT_1 territorial 2026 incorporados; continuar cargando únicamente resultados territoriales respaldados",
+  "estado": "IAT_1, IUT_1–IUT_8 cargados para 2026; continuar con Ambiental, Sociocultural y Económica.",
   "metadatos": {
-    "IUT_7_2026": {
-      "indicador": "Hacinamiento",
-      "fuente": "INE Censo 2024 · 13101_manzana_entidad_CPV24.xlsx",
-      "numerador": "n_viv_hacinadas agregado desde manzana a territorio",
-      "denominador_operativo": "n_vp_ocupada agregado desde manzana a territorio",
-      "normalizacion": "Min–Max inversa entre 6 territorios",
-      "cobertura_numerador": 0.9871690428,
-      "hacinadas_territorializadas": 19388,
-      "hacinadas_comuna": 19640,
-      "residual_contenedor_comunal": 252,
-      "nota": "El residual corresponde a un contenedor comunal sin manzana y no se distribuye artificialmente entre territorios. El denominador operativo es el disponible en la base agregada manzana-entidad; el denominador censal estricto de viviendas con dato válido de dormitorios no está desagregado territorialmente en esta base pública."
-    },
-    "IAT_1_2026": {
-      "indicador": "Microbasurales / incivilidades en espacios públicos",
-      "fuente": "IAT_1_MICROBASURALES_CALCULO_2026_FUENTE2025",
-      "valor_real": "Frecuencia de registros/incivilidades agregada por territorio",
-      "normalizacion": "Min–Max inversa entre 6 territorios",
-      "sentido": "INVERSO",
-      "estado": "VALIDADO PARA SÍNTESIS 2026"
-    }
+    "IUT_7_2026": {"indicador":"Hacinamiento","fuente":"INE Censo 2024 · 13101_manzana_entidad_CPV24.xlsx","numerador":"n_viv_hacinadas agregado desde manzana a territorio","denominador_operativo":"n_vp_ocupada agregado desde manzana a territorio","normalizacion":"Min–Max inversa entre 6 territorios","cobertura_numerador":0.9871690428,"hacinadas_territorializadas":19388,"hacinadas_comuna":19640,"residual_contenedor_comunal":252,"nota":"El residual corresponde a un contenedor comunal sin manzana y no se distribuye artificialmente entre territorios."},
+    "IAT_1_2026": {"indicador":"Microbasurales / incivilidades en espacios públicos","fuente":"IAT_1_MICROBASURALES_CALCULO_2026_FUENTE2025","valor_real":"Frecuencia de registros/incivilidades agregada por territorio","normalizacion":"Min–Max inversa entre 6 territorios","sentido":"INVERSO","estado":"VALIDADO PARA SÍNTESIS 2026"},
+    "IUT_1_2026": {"indicador":"Actividades autorizadas en BNUP","fuente":"IUT_1_CALCULO_2026_FINAL.xlsx","escala":"CALCULO_TERRITORIO · 6/6 territorios","normalizacion":"Percentil directo","sentido":"DIRECTO","estado":"RESPALDO TERRITORIAL REAL 2026"},
+    "IUT_2_2026": {"indicador":"Patrimonio ICH-MH","fuente":"IUT_2_CALCULO_2026_FINAL.xlsx","escala":"CALCULO_TERRITORIO · 6/6 territorios","normalizacion":"Percentil directo","sentido":"DIRECTO","estado":"RESPALDO TERRITORIAL REAL 2026"},
+    "IUT_3_2026": {"indicador":"Accidentes viales","fuente":"IUT_3_CALCULO_2026_FINAL.xlsx","escala":"CALCULO_TERRITORIO · 6/6 territorios","normalizacion":"Percentil inverso","sentido":"INVERSO","estado":"RESPALDO TERRITORIAL REAL 2026"},
+    "IUT_4_2026": {"indicador":"Protección patrimonial ZT","fuente":"IUT_4_CALCULO_2026_FINAL.xlsx","escala":"CALCULO_TERRITORIO · 6/6 territorios","normalizacion":"Min–Max directo","sentido":"DIRECTO","estado":"RESPALDO TERRITORIAL REAL 2026"},
+    "IUT_5_2026": {"indicador":"Infraestructura de conectividad pública","fuente":"IUT_5_CALCULO_2026_FINAL.xlsx","escala":"CALCULO_TERRITORIO · 6/6 territorios","normalizacion":"Percentil directo","sentido":"DIRECTO","estado":"RESPALDO TERRITORIAL REAL 2026"},
+    "IUT_6_2026": {"indicador":"Rutas patrimoniales y turísticas","fuente":"IUT_6_CALCULO_2026_FINAL.xlsx","escala":"CALCULO_TERRITORIO · 6/6 territorios","normalizacion":"Percentil directo","sentido":"DIRECTO","estado":"RESPALDO TERRITORIAL REAL 2026"},
+    "IUT_8_2026": {"indicador":"Protección patrimonial ZCH","fuente":"IUT_8_CALCULO_2026_FINAL.xlsx","escala":"CALCULO_TERRITORIO · 6/6 territorios","normalizacion":"Min–Max directo","sentido":"DIRECTO","estado":"RESPALDO TERRITORIAL REAL 2026"}
   },
   "series": [
-    {"anio": 2026, "territorio": "NORORIENTE", "valores": {"IUT_7": 0.6761982604, "IAT_1": 0.2383177570}, "valores_reales": {"IUT_7": 8.5123407398, "IAT_1": 171}},
-    {"anio": 2026, "territorio": "NORPONIENTE", "valores": {"IUT_7": 0.2278072963, "IAT_1": 0.0}, "valores_reales": {"IUT_7": 11.4471332520, "IAT_1": 222}},
-    {"anio": 2026, "territorio": "CENTRO ORIENTE", "valores": {"IUT_7": 0.8179688723, "IAT_1": 0.6822429907}, "valores_reales": {"IUT_7": 7.5844287977, "IAT_1": 76}},
-    {"anio": 2026, "territorio": "CENTRO PONIENTE", "valores": {"IUT_7": 1.0, "IAT_1": 1.0}, "valores_reales": {"IUT_7": 6.3930051666, "IAT_1": 8}},
-    {"anio": 2026, "territorio": "SURORIENTE", "valores": {"IUT_7": 0.0, "IAT_1": 0.9953271028}, "valores_reales": {"IUT_7": 12.9381694255, "IAT_1": 9}},
-    {"anio": 2026, "territorio": "SURPONIENTE", "valores": {"IUT_7": 0.5016382587, "IAT_1": 0.9719626168}, "valores_reales": {"IUT_7": 9.6548646236, "IAT_1": 14}}
+    {"anio":2026,"territorio":"NORORIENTE","valores":{"IUT_7":0.6761982604,"IAT_1":0.238317757,"IUT_1":1.0,"IUT_2":0.6,"IUT_3":0.6666666667,"IUT_4":0.3923809524,"IUT_5":0.6666666667,"IUT_6":1.0,"IUT_8":0.6320324379},"valores_reales":{"IUT_7":8.5123407398,"IAT_1":171,"IUT_1":5.1232678885,"IUT_2":268,"IUT_3":48.8257745074,"IUT_4":29.94,"IUT_5":16.160643675,"IUT_6":2.2349826359,"IUT_8":65.03}},
+    {"anio":2026,"territorio":"NORPONIENTE","valores":{"IUT_7":0.2278072963,"IAT_1":0.0,"IUT_1":0.6666666667,"IUT_2":1.0,"IUT_3":0.5,"IUT_4":1.0,"IUT_5":0.5,"IUT_6":0.8333333333,"IUT_8":1.0},"valores_reales":{"IUT_7":11.447133252,"IAT_1":222,"IUT_1":1.6172506739,"IUT_2":558,"IUT_3":53.9083557951,"IUT_4":58.65,"IUT_5":14.8576687923,"IUT_6":0.2629675892,"IUT_8":79.55}},
+    {"anio":2026,"territorio":"CENTRO ORIENTE","valores":{"IUT_7":0.8179688723,"IAT_1":0.6822429907,"IUT_1":0.5,"IUT_2":0.4,"IUT_3":0.8333333333,"IUT_4":0.2027513228,"IUT_5":0.1666666667,"IUT_6":0.5,"IUT_8":0.4883426254},"valores_reales":{"IUT_7":7.5844287977,"IAT_1":76,"IUT_1":0.4354100318,"IUT_2":206,"IUT_3":48.7659235669,"IUT_4":20.98,"IUT_5":8.210589172,"IUT_6":0.1866042994,"IUT_8":59.36}},
+    {"anio":2026,"territorio":"CENTRO PONIENTE","valores":{"IUT_7":1.0,"IAT_1":1.0,"IUT_1":0.1666666667,"IUT_2":0.2,"IUT_3":0.1666666667,"IUT_4":0.0,"IUT_5":0.3333333333,"IUT_6":0.25,"IUT_8":0.0},"valores_reales":{"IUT_7":6.3930051666,"IAT_1":8,"IUT_1":0.2391343337,"IUT_2":185,"IUT_3":64.2673521851,"IUT_4":11.4,"IUT_5":14.6469779399,"IUT_6":0.0,"IUT_8":40.09}},
+    {"anio":2026,"territorio":"SURORIENTE","valores":{"IUT_7":0.0,"IAT_1":0.9953271028,"IUT_1":0.8333333333,"IUT_2":0.8,"IUT_3":0.3333333333,"IUT_4":0.4046560847,"IUT_5":0.8333333333,"IUT_6":0.6666666667,"IUT_8":0.5220476432},"valores_reales":{"IUT_7":12.9381694255,"IAT_1":9,"IUT_1":3.6284756458,"IUT_2":340,"IUT_3":59.4228620259,"IUT_4":30.52,"IUT_5":17.3535791757,"IUT_6":0.2629330178,"IUT_8":60.69}},
+    {"anio":2026,"territorio":"SURPONIENTE","valores":{"IUT_7":0.5016382587,"IAT_1":0.9719626168,"IUT_1":0.3333333333,"IUT_2":0.0,"IUT_3":1.0,"IUT_4":0.7104761905,"IUT_5":1.0,"IUT_6":0.25,"IUT_8":0.2769893563},"valores_reales":{"IUT_7":9.6548646236,"IAT_1":14,"IUT_1":0.253871541,"IUT_2":50,"IUT_3":36.267363,"IUT_4":44.97,"IUT_5":22.12309143,"IUT_6":0.0,"IUT_8":51.02}}
   ]
 }
