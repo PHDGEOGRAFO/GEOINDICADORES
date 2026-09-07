@@ -1,0 +1,7 @@
+{
+  "fuente": "Cálculos territoriales recalculados desde valores brutos",
+  "criterio": "El valor real territorial tiene prioridad. El promedio normalizado de barrios es solo referencia secundaria.",
+  "regla_valoracion": "0 = condición más desfavorable; 1 = condición óptima o más favorable",
+  "estado": "estructura preparada; incorporar únicamente resultados territoriales respaldados",
+  "series": []
+}
