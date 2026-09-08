@@ -2,28 +2,52 @@
   "fuente": "Cálculos territoriales reales desde respaldos oficiales por indicador",
   "criterio": "El valor real territorial tiene prioridad. El promedio normalizado de barrios es solo referencia secundaria.",
   "regla_valoracion": "0 = condición más desfavorable; 1 = condición óptima o más favorable",
-  "estado": "2026 cargado: IAT_1, IUT_1–IUT_8 e IET_1–IET_4. Continúa consolidación Ambiental y Sociocultural.",
+  "regla_temporal": "2025 corresponde a fuente 2024; 2026 solo se publica cuando existe fuente 2025 o una fuente censal expresamente homologada para 2026.",
+  "estado": "Depuración temporal aplicada. En 2026 quedan únicamente IAT_1, IUT_1 e IUT_7 con fuente/medición validada. IUT_2, IUT_3, IUT_4, IUT_5, IUT_6, IUT_8 e IET_1–IET_4 se retiraron de 2026 hasta disponer de segunda medición válida.",
   "metadatos": {
-    "IUT_7_2026": {"indicador":"Hacinamiento","fuente":"INE Censo 2024 · 13101_manzana_entidad_CPV24.xlsx","normalizacion":"Min–Max inversa entre 6 territorios","cobertura_numerador":0.9871690428,"residual_contenedor_comunal":252},
-    "IAT_1_2026": {"indicador":"Microbasurales / incivilidades en espacios públicos","fuente":"IAT_1_MICROBASURALES_CALCULO_2026_FUENTE2025","normalizacion":"Min–Max inversa entre 6 territorios","sentido":"INVERSO"},
-    "IUT_1_2026": {"indicador":"Actividades autorizadas en BNUP","fuente":"IUT_1_CALCULO_2026_FINAL.xlsx","normalizacion":"Percentil directo","sentido":"DIRECTO"},
-    "IUT_2_2026": {"indicador":"Patrimonio ICH-MH","fuente":"IUT_2_CALCULO_2026_FINAL.xlsx","normalizacion":"Percentil directo","sentido":"DIRECTO"},
-    "IUT_3_2026": {"indicador":"Accidentes viales","fuente":"IUT_3_CALCULO_2026_FINAL.xlsx","normalizacion":"Percentil inverso","sentido":"INVERSO"},
-    "IUT_4_2026": {"indicador":"Protección patrimonial ZT","fuente":"IUT_4_CALCULO_2026_FINAL.xlsx","normalizacion":"Min–Max directo","sentido":"DIRECTO"},
-    "IUT_5_2026": {"indicador":"Infraestructura de conectividad pública","fuente":"IUT_5_CALCULO_2026_FINAL.xlsx","normalizacion":"Percentil directo","sentido":"DIRECTO"},
-    "IUT_6_2026": {"indicador":"Rutas patrimoniales y turísticas","fuente":"IUT_6_CALCULO_2026_FINAL.xlsx","normalizacion":"Percentil directo","sentido":"DIRECTO"},
-    "IUT_8_2026": {"indicador":"Protección patrimonial ZCH","fuente":"IUT_8_CALCULO_2026_FINAL.xlsx","normalizacion":"Min–Max directo","sentido":"DIRECTO"},
-    "IET_1_2026": {"indicador":"Patentes comercio y servicios","fuente":"IET_1_CALCULO_2026_FINAL.xlsx","unidad":"registros por 1.000 habitantes","sentido":"DIRECTO"},
-    "IET_2_2026": {"indicador":"Patentes totales/comerciales","fuente":"IET_2_CALCULO_2026_FINAL.xlsx","unidad":"registros por 1.000 habitantes","sentido":"DIRECTO"},
-    "IET_3_2026": {"indicador":"Patentes turismo/gastronomía","fuente":"IET_3_CALCULO_2026_FINAL.xlsx","unidad":"registros por 1.000 habitantes","sentido":"DIRECTO"},
-    "IET_4_2026": {"indicador":"Industria creativa","fuente":"IET_4_CALCULO_2026_FINAL.xlsx","unidad":"registros por 1.000 habitantes","sentido":"DIRECTO"}
+    "IAT_1_2026": {
+      "indicador": "Microbasurales / incivilidades en espacios públicos",
+      "fuente": "IAT_1_MICROBASURALES_CALCULO_2026_FUENTE2025",
+      "anio_fuente": 2025,
+      "normalizacion": "Min–Max inversa entre 6 territorios",
+      "sentido": "INVERSO"
+    },
+    "IUT_1_2026": {
+      "indicador": "Actividades autorizadas en BNUP",
+      "fuente": "Actividades transitorias 2025 (IMS).xlsx",
+      "anio_fuente": 2025,
+      "normalizacion": "Percentil directo",
+      "sentido": "DIRECTO",
+      "nota": "El archivo metodológico declara explícitamente Fuente anual 2025."
+    },
+    "IUT_7_2026": {
+      "indicador": "Hacinamiento",
+      "fuente": "INE Censo 2024 · 13101_manzana_entidad_CPV24.xlsx",
+      "anio_fuente": 2024,
+      "homologacion_temporal": "Censo 2024 definido como base oficial del indicador 2026",
+      "normalizacion": "Min–Max inversa entre 6 territorios",
+      "cobertura_numerador": 0.9871690428,
+      "residual_contenedor_comunal": 252
+    }
   },
   "series": [
-    {"anio":2026,"territorio":"NORORIENTE","valores":{"IUT_7":0.6761982604,"IAT_1":0.238317757,"IUT_1":1.0,"IUT_2":0.6,"IUT_3":0.6666666667,"IUT_4":0.3923809524,"IUT_5":0.6666666667,"IUT_6":1.0,"IUT_8":0.6320324379,"IET_1":1.0,"IET_2":1.0,"IET_3":1.0,"IET_4":0.8},"valores_reales":{"IUT_7":8.5123407398,"IAT_1":171,"IUT_1":5.1232678885,"IUT_2":268,"IUT_3":48.8257745074,"IUT_4":29.94,"IUT_5":16.160643675,"IUT_6":2.2349826359,"IUT_8":65.03,"IET_1":372.8122958429,"IET_2":399.5805109514,"IET_3":56.8889041708,"IET_4":3.0258226455}},
-    {"anio":2026,"territorio":"NORPONIENTE","valores":{"IUT_7":0.2278072963,"IAT_1":0.0,"IUT_1":0.6666666667,"IUT_2":1.0,"IUT_3":0.5,"IUT_4":1.0,"IUT_5":0.5,"IUT_6":0.8333333333,"IUT_8":1.0,"IET_1":0.4,"IET_2":0.4,"IET_3":0.4,"IET_4":1.0},"valores_reales":{"IUT_7":11.447133252,"IAT_1":222,"IUT_1":1.6172506739,"IUT_2":558,"IUT_3":53.9083557951,"IUT_4":58.65,"IUT_5":14.8576687923,"IUT_6":0.2629675892,"IUT_8":79.55,"IET_1":52.8564854382,"IET_2":60.5088422852,"IET_3":11.5311287884,"IET_4":3.1687594504}},
-    {"anio":2026,"territorio":"CENTRO ORIENTE","valores":{"IUT_7":0.8179688723,"IAT_1":0.6822429907,"IUT_1":0.5,"IUT_2":0.4,"IUT_3":0.8333333333,"IUT_4":0.2027513228,"IUT_5":0.1666666667,"IUT_6":0.5,"IUT_8":0.4883426254,"IET_1":0.2,"IET_2":0.2,"IET_3":0.2,"IET_4":0.2},"valores_reales":{"IUT_7":7.5844287977,"IAT_1":76,"IUT_1":0.4354100318,"IUT_2":206,"IUT_3":48.7659235669,"IUT_4":20.98,"IUT_5":8.210589172,"IUT_6":0.1866042994,"IUT_8":59.36,"IET_1":50.5386644108,"IET_2":56.1181329618,"IET_3":9.7158638535,"IET_4":1.3248905255}},
-    {"anio":2026,"territorio":"CENTRO PONIENTE","valores":{"IUT_7":1.0,"IAT_1":1.0,"IUT_1":0.1666666667,"IUT_2":0.2,"IUT_3":0.1666666667,"IUT_4":0.0,"IUT_5":0.3333333333,"IUT_6":0.25,"IUT_8":0.0,"IET_1":0.8,"IET_2":0.8,"IET_3":0.8,"IET_4":0.6},"valores_reales":{"IUT_7":6.3930051666,"IAT_1":8,"IUT_1":0.2391343337,"IUT_2":185,"IUT_3":64.2673521851,"IUT_4":11.4,"IUT_5":14.6469779399,"IUT_6":0.0,"IUT_8":40.09,"IET_1":113.8877264303,"IET_2":128.1162192862,"IET_3":21.6117654092,"IET_4":2.1821007951}},
-    {"anio":2026,"territorio":"SURORIENTE","valores":{"IUT_7":0.0,"IAT_1":0.9953271028,"IUT_1":0.8333333333,"IUT_2":0.8,"IUT_3":0.3333333333,"IUT_4":0.4046560847,"IUT_5":0.8333333333,"IUT_6":0.6666666667,"IUT_8":0.5220476432,"IET_1":0.6,"IET_2":0.6,"IET_3":0.6,"IET_4":0.4},"valores_reales":{"IUT_7":12.9381694255,"IAT_1":9,"IUT_1":3.6284756458,"IUT_2":340,"IUT_3":59.4228620259,"IUT_4":30.52,"IUT_5":17.3535791757,"IUT_6":0.2629330178,"IUT_8":60.69,"IET_1":79.2743048708,"IET_2":92.0791428384,"IET_3":13.4621705121,"IET_4":1.4592782489}},
-    {"anio":2026,"territorio":"SURPONIENTE","valores":{"IUT_7":0.5016382587,"IAT_1":0.9719626168,"IUT_1":0.3333333333,"IUT_2":0.0,"IUT_3":1.0,"IUT_4":0.7104761905,"IUT_5":1.0,"IUT_6":0.25,"IUT_8":0.2769893563,"IET_1":0.0,"IET_2":0.0,"IET_3":0.0,"IET_4":0.0},"valores_reales":{"IUT_7":9.6548646236,"IAT_1":14,"IUT_1":0.253871541,"IUT_2":50,"IUT_3":36.267363,"IUT_4":44.97,"IUT_5":22.12309143,"IUT_6":0.0,"IUT_8":51.02,"IET_1":34.308925398,"IET_2":39.8940993,"IET_3":7.797483045,"IET_4":1.08802089}}
+    {"anio":2026,"territorio":"NORORIENTE","valores":{"IUT_7":0.6761982604,"IAT_1":0.238317757,"IUT_1":1.0},"valores_reales":{"IUT_7":8.5123407398,"IAT_1":171,"IUT_1":5.1232678885}},
+    {"anio":2026,"territorio":"NORPONIENTE","valores":{"IUT_7":0.2278072963,"IAT_1":0.0,"IUT_1":0.6666666667},"valores_reales":{"IUT_7":11.447133252,"IAT_1":222,"IUT_1":1.6172506739}},
+    {"anio":2026,"territorio":"CENTRO ORIENTE","valores":{"IUT_7":0.8179688723,"IAT_1":0.6822429907,"IUT_1":0.5},"valores_reales":{"IUT_7":7.5844287977,"IAT_1":76,"IUT_1":0.4354100318}},
+    {"anio":2026,"territorio":"CENTRO PONIENTE","valores":{"IUT_7":1.0,"IAT_1":1.0,"IUT_1":0.1666666667},"valores_reales":{"IUT_7":6.3930051666,"IAT_1":8,"IUT_1":0.2391343337}},
+    {"anio":2026,"territorio":"SURORIENTE","valores":{"IUT_7":0.0,"IAT_1":0.9953271028,"IUT_1":0.8333333333},"valores_reales":{"IUT_7":12.9381694255,"IAT_1":9,"IUT_1":3.6284756458}},
+    {"anio":2026,"territorio":"SURPONIENTE","valores":{"IUT_7":0.5016382587,"IAT_1":0.9719626168,"IUT_1":0.3333333333},"valores_reales":{"IUT_7":9.6548646236,"IAT_1":14,"IUT_1":0.2538715410}}
+  ],
+  "pendientes_2026": [
+    {"codigo":"IUT_2","motivo":"Archivo 2026 reutiliza fuente histórica; no se acreditó actualización anual."},
+    {"codigo":"IUT_3","motivo":"Archivo 2026 declara AÑO_FUENTE=2024."},
+    {"codigo":"IUT_4","motivo":"Archivo 2026 reutiliza fuente histórica ZT; no se acreditó actualización anual."},
+    {"codigo":"IUT_5","motivo":"Archivo 2026 declara AÑO_FUENTE=2024, utilizado como línea base 2025."},
+    {"codigo":"IUT_6","motivo":"Archivo 2026 declara AÑO_FUENTE=2024, utilizado como línea base 2025."},
+    {"codigo":"IUT_8","motivo":"Archivo 2026 reutiliza fuente histórica ZCH; no se acreditó actualización anual."},
+    {"codigo":"IET_1","motivo":"Archivo rotulado 2026 declara fuente 2024; corresponde a línea base 2025."},
+    {"codigo":"IET_2","motivo":"Archivo rotulado 2026 declara fuente 2024; corresponde a línea base 2025."},
+    {"codigo":"IET_3","motivo":"Archivo rotulado 2026 declara fuente 2024; corresponde a línea base 2025."},
+    {"codigo":"IET_4","motivo":"Archivo rotulado 2026 declara fuente 2024; corresponde a línea base 2025."}
   ]
 }
