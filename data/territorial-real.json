@@ -3,14 +3,26 @@
   "criterio": "El valor real territorial tiene prioridad. El promedio normalizado de barrios es solo referencia secundaria.",
   "regla_valoracion": "0 = condición más desfavorable; 1 = condición óptima o más favorable",
   "regla_temporal": "2025 corresponde a fuente 2024; 2026 solo se publica cuando existe fuente 2025 o una fuente censal expresamente homologada para 2026.",
-  "estado": "Depuración temporal aplicada. En 2026 quedan validados IAT_1, IAT_5, IUT_1 e IUT_7. El resto permanece pendiente hasta segunda medición válida.",
+  "estado": "2025 iniciado con IAT_1, IAT_3 e IAT_4 reales; 2026 validado actualmente para IAT_1, IAT_5, IUT_1 e IUT_7.",
+  "alertas_metodologicas": [
+    "IAT_1 presenta discontinuidad metodológica entre respaldos: 2025 usa tasa de denuncias por 10.000 habitantes con Censo 2017, mientras 2026 usa frecuencia absoluta sin denominador poblacional. No interpretar su evolución anual como serie homogénea hasta homologar la fórmula."
+  ],
   "metadatos": {
-    "IAT_1_2026": {"indicador":"Microbasurales / incivilidades en espacios públicos","fuente":"IAT_1_MICROBASURALES_CALCULO_2026_FUENTE2025","anio_fuente":2025,"normalizacion":"Min–Max inversa entre 6 territorios","sentido":"INVERSO"},
+    "IAT_1_2025": {"indicador":"Microbasurales","fuente":"IAT_1_RESPALDO_TERRITORIAL_2025_RECALCULADO_CENSO2017.xlsx","anio_fuente":2024,"valor_real":"denuncias / población Censo 2017 × 10.000","normalizacion":"Min–Max inversa","sentido":"INVERSO"},
+    "IAT_3_2025": {"indicador":"Área verde menor","fuente":"IAT_3_RESPALDO_TERRITORIAL_2025_AREA_VERDE_MENOR.xlsx","anio_fuente":2024,"valor_real":"AV_MENOR_M2 / superficie territorio × 100","normalizacion":"Min–Max directo","sentido":"DIRECTO"},
+    "IAT_4_2025": {"indicador":"Parques","fuente":"IAT_4_RESPALDO_TERRITORIAL_2025_PARQUES.xlsx","anio_fuente":2024,"valor_real":"PARQUE_M2 / superficie territorio × 100","normalizacion":"Min–Max directo","sentido":"DIRECTO"},
+    "IAT_1_2026": {"indicador":"Microbasurales / incivilidades en espacios públicos","fuente":"IAT_1_MICROBASURALES_CALCULO_2026_FUENTE2025","anio_fuente":2025,"valor_real":"frecuencia absoluta territorial","normalizacion":"Min–Max inversa entre 6 territorios","sentido":"INVERSO","comparabilidad_2025_2026":"NO HOMOLOGADA"},
     "IAT_5_2026": {"indicador":"Superficie vegetal NDVI","fuente":"NDVI 2025 agregado desde manzana a territorio","anio_fuente":2025,"valor_real":"SUP_VEG_M2 / SUP_TERR_M2 × 100","normalizacion":"Min–Max directo entre 6 territorios","sentido":"DIRECTO"},
-    "IUT_1_2026": {"indicador":"Actividades autorizadas en BNUP","fuente":"Actividades transitorias 2025 (IMS).xlsx","anio_fuente":2025,"normalizacion":"Percentil directo","sentido":"DIRECTO","nota":"El archivo metodológico declara explícitamente Fuente anual 2025."},
+    "IUT_1_2026": {"indicador":"Actividades autorizadas en BNUP","fuente":"Actividades transitorias 2025 (IMS).xlsx","anio_fuente":2025,"normalizacion":"Percentil directo","sentido":"DIRECTO"},
     "IUT_7_2026": {"indicador":"Hacinamiento","fuente":"INE Censo 2024 · 13101_manzana_entidad_CPV24.xlsx","anio_fuente":2024,"homologacion_temporal":"Censo 2024 definido como base oficial del indicador 2026","normalizacion":"Min–Max inversa entre 6 territorios","cobertura_numerador":0.9871690428,"residual_contenedor_comunal":252}
   },
   "series": [
+    {"anio":2025,"territorio":"NORORIENTE","valores":{"IAT_1":1.0,"IAT_3":1.0,"IAT_4":0.5229122773},"valores_reales":{"IAT_1":3.6521008710,"IAT_3":4.2420657643,"IAT_4":11.1277603564}},
+    {"anio":2025,"territorio":"NORPONIENTE","valores":{"IAT_1":0.6919029868,"IAT_3":0.1040922762,"IAT_4":0.6164137553},"valores_reales":{"IAT_1":5.4039804929,"IAT_3":1.0163036199,"IAT_4":13.1175052628}},
+    {"anio":2025,"territorio":"CENTRO ORIENTE","valores":{"IAT_1":0.8301643477,"IAT_3":0.1346716665,"IAT_4":0.0926293783},"valores_reales":{"IAT_1":4.6178084424,"IAT_3":1.1264062978,"IAT_4":1.9711863123}},
+    {"anio":2025,"territorio":"CENTRO PONIENTE","valores":{"IAT_1":0.8366391392,"IAT_3":0.3189506789,"IAT_4":0.0},"valores_reales":{"IAT_1":4.5809919375,"IAT_3":1.7899124231,"IAT_4":0.0}},
+    {"anio":2025,"territorio":"SURORIENTE","valores":{"IAT_1":0.0,"IAT_3":0.0,"IAT_4":0.0},"valores_reales":{"IAT_1":9.3382307166,"IAT_3":0.6415139902,"IAT_4":0.0}},
+    {"anio":2025,"territorio":"SURPONIENTE","valores":{"IAT_1":0.0070165939,"IAT_3":0.1418714821,"IAT_4":1.0},"valores_reales":{"IAT_1":9.2983334525,"IAT_3":1.1523296067,"IAT_4":21.2803577950}},
     {"anio":2026,"territorio":"NORORIENTE","valores":{"IUT_7":0.6761982604,"IAT_1":0.238317757,"IAT_5":0.4085098615,"IUT_1":1.0},"valores_reales":{"IUT_7":8.5123407398,"IAT_1":171,"IAT_5":15.027748,"IUT_1":5.1232678885}},
     {"anio":2026,"territorio":"NORPONIENTE","valores":{"IUT_7":0.2278072963,"IAT_1":0.0,"IAT_5":0.5758827072,"IUT_1":0.6666666667},"valores_reales":{"IUT_7":11.447133252,"IAT_1":222,"IAT_5":20.247659,"IUT_1":1.6172506739}},
     {"anio":2026,"territorio":"CENTRO ORIENTE","valores":{"IUT_7":0.8179688723,"IAT_1":0.6822429907,"IAT_5":0.1814112741,"IUT_1":0.5},"valores_reales":{"IUT_7":7.5844287977,"IAT_1":76,"IAT_5":7.945151,"IUT_1":0.4354100318}},
