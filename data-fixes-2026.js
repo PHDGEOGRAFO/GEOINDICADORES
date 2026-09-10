@@ -1,4 +1,12 @@
 (()=>{
+  const iat2Real2026={
+    'NORORIENTE':0.2606123228920437,
+    'NORPONIENTE':1,
+    'CENTRO ORIENTE':0.838016107800535,
+    'CENTRO PONIENTE':0,
+    'SURORIENTE':0.9830287760619401,
+    'SURPONIENTE':0
+  };
   const ist8Real2026={
     'NORORIENTE':0,
     'NORPONIENTE':1,
@@ -17,7 +25,7 @@
   };
   const comunaPromedio2026={IAT_2:0.22814969957892142,IST_8:0.20555555555555555};
   window.GI_RELOAD_2026={
-    IAT_2:{territorio_real:null,territorio_promedio:territorioPromedio2026,comuna_promedio:comunaPromedio2026.IAT_2,nota:'Sin territorio real validado en 2026; no distribuir ni imputar.'},
+    IAT_2:{territorio_real:iat2Real2026,territorio_promedio:territorioPromedio2026,comuna_promedio:comunaPromedio2026.IAT_2,nota:'Restaurado desde cálculo cerrado y respaldado; no recalcular.'},
     IST_8:{territorio_real:ist8Real2026,territorio_promedio:territorioPromedio2026,comuna_promedio:comunaPromedio2026.IST_8}
   };
   if(typeof featureValue!=='function'||typeof state==='undefined') return;
@@ -28,7 +36,12 @@
       const territorio=String(feature.properties?.TERRITORIO??'').trim();
       const vals=[];
       for(const code of state.selectedIndicators){
-        if(code==='IAT_2') return null;
+        if(code==='IAT_2'){
+          const v=iat2Real2026[territorio];
+          if(!Number.isFinite(v)) return null;
+          vals.push(v);
+          continue;
+        }
         if(code==='IST_8'){
           const v=ist8Real2026[territorio];
           if(!Number.isFinite(v)) return null;
