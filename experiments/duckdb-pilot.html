@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Piloto DuckDB Wasm · GeoIndicadores</title></head>
+<body>
+<h1>Piloto DuckDB Wasm · GeoIndicadores</h1>
+<pre id="out">Cargando…</pre>
+<script type="module">
+import * as duckdb from 'https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.1-dev106.0/+esm';
+const out=document.getElementById('out');
+try{
+  const bundles=duckdb.getJsDelivrBundles();
+  const bundle=await duckdb.selectBundle(bundles);
+  const workerUrl=URL.createObjectURL(new Blob([`importScripts('${bundle.mainWorker}');`],{type:'text/javascript'}));
+  const worker=new Worker(workerUrl);
+  const logger=new duckdb.ConsoleLogger(duckdb.LogLevel.WARNING);
+  const db=new duckdb.AsyncDuckDB(logger,worker);
+  await db.instantiate(bundle.mainModule,bundle.pthreadWorker);
+  const conn=await db.connect();
+  const result=await conn.query(`
+    SELECT * FROM (VALUES
+      ('barrio',27),
+      ('territorio',6),
+      ('comuna',1)
+    ) AS t(escala, unidades)
+    ORDER BY unidades DESC
+  `);
+  out.textContent=JSON.stringify({ok:true,prueba:'consulta SQL local de solo lectura',rows:result.toArray().map(r=>({escala:String(r.escala),unidades:Number(r.unidades)}))},null,2);
+  await conn.close();
+  await db.terminate();
+}catch(error){out.textContent='ERROR\n'+(error.stack||error.message||error)}
+</script>
+</body></html>
