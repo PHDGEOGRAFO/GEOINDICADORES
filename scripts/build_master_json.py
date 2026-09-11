@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Genera JSON maestros del visor desde BBDD_Visor_Geoindicadores_2025_2026.xlsx.
+"""Genera JSON maestros del visor desde la BBDD Maestra.
 
-Reglas clave:
-- 0 es un valor valido y nunca se convierte en nulo.
-- Solo None o cadenas vacias se interpretan como ausencia de dato.
-- Los barrios se leen por nombre, no por posicion fija.
-- Los agregados territoriales distinguen REAL, PROMEDIO y DIFERENCIA.
+Reglas:
+- 0 es dato válido y nunca se convierte en null.
+- Solo None o cadenas vacías representan ausencia real.
+- La posición de número/nombre de barrio y bloques agregados se detecta,
+  evitando depender de columnas fijas A/B o B/C.
+- Se exigen exactamente 27 barrios por año.
 """
 from __future__ import annotations
 
@@ -19,6 +20,7 @@ from openpyxl import load_workbook
 
 YEARS = (2025, 2026)
 EXPECTED_BARRIOS = 27
+CODES = ("IAT_", "IUT_", "IST_", "IET_", "IIT_")
 
 
 def blank(value: Any) -> bool:
@@ -53,68 +55,84 @@ def find_cell(ws, predicate):
 
 
 def code_columns(ws):
-    code_anchor = find_cell(ws, lambda v: norm(v) == "IAT_1")
-    if not code_anchor:
-        raise RuntimeError(f"No se encontro fila de codigos en hoja {ws.title}")
+    anchor = find_cell(ws, lambda v: norm(v) == "IAT_1")
+    if not anchor:
+        raise RuntimeError(f"No se encontró IAT_1 en {ws.title}")
     result = {}
-    for cell in ws[code_anchor.row]:
+    for cell in ws[anchor.row]:
         value = norm(cell.value)
-        if value.startswith(("IAT_", "IUT_", "IST_", "IET_", "IIT_")):
+        if value.startswith(CODES):
             result[cell.column] = value
-    return result, code_anchor.row
+    return result, anchor.row
 
 
-def barrio_rows(ws, code_row):
-    # En la BBDD actual, los barrios comienzan inmediatamente despues de la fila de codigos.
-    rows = []
-    for r in range(code_row + 1, ws.max_row + 1):
-        barrio = ws.cell(r, 3).value
-        seq = ws.cell(r, 2).value
-        if norm(ws.cell(r, 2).value) == "TIPO DE VALOR":
-            break
-        if blank(barrio):
-            continue
-        # Evita capturar encabezados o notas posteriores.
-        if isinstance(seq, (int, float)) or (isinstance(seq, str) and seq.strip().isdigit()):
-            rows.append(r)
-    return rows
+def detect_barrio_columns(ws, code_row):
+    """Detecta columna secuencial 1..27 y la columna de nombre contigua."""
+    for seq_col in range(1, min(ws.max_column or 40, 10) + 1):
+        values = [ws.cell(code_row + i, seq_col).value for i in range(1, 6)]
+        numeric = []
+        for value in values:
+            try:
+                numeric.append(int(float(value)))
+            except (TypeError, ValueError):
+                numeric.append(None)
+        if numeric == [1, 2, 3, 4, 5]:
+            name_col = seq_col + 1
+            if all(not blank(ws.cell(code_row + i, name_col).value) for i in range(1, 6)):
+                return seq_col, name_col
+    raise RuntimeError(f"No se pudieron detectar columnas de barrio en {ws.title}")
 
 
 def parse_barrios(ws):
     codes, code_row = code_columns(ws)
-    rows = barrio_rows(ws, code_row)
+    seq_col, name_col = detect_barrio_columns(ws, code_row)
     records = []
-    for r in rows:
-        name = str(ws.cell(r, 3).value).strip()
+    for r in range(code_row + 1, code_row + EXPECTED_BARRIOS + 1):
+        seq = ws.cell(r, seq_col).value
+        name = ws.cell(r, name_col).value
+        try:
+            seq_num = int(float(seq))
+        except (TypeError, ValueError):
+            raise RuntimeError(f"Hoja {ws.title}: secuencia barrial inválida en fila {r}: {seq!r}")
+        if seq_num != len(records) + 1 or blank(name):
+            raise RuntimeError(f"Hoja {ws.title}: estructura barrial inesperada en fila {r}")
         vals = {code: scalar(ws.cell(r, col).value) for col, code in codes.items()}
-        records.append({"nombre": name, "valores": vals})
+        records.append({"id": seq_num, "nombre": str(name).strip(), "valores": vals})
     return records, list(codes.values())
 
 
-def parse_territorios(ws):
+def parse_block(ws, accepted_types):
     codes, _ = code_columns(ws)
-    out = {"real": {}, "promedio": {}, "diferencia": {}}
-    for r in range(1, ws.max_row + 1):
-        tipo = norm(ws.cell(r, 2).value)
-        territorio = ws.cell(r, 3).value
-        if tipo not in {"TERRITORIO REAL", "TERRITORIO PROMEDIO", "DIFERENCIA TERRITORIAL"} or blank(territorio):
-            continue
-        key = {"TERRITORIO REAL": "real", "TERRITORIO PROMEDIO": "promedio", "DIFERENCIA TERRITORIAL": "diferencia"}[tipo]
-        out[key][str(territorio).strip()] = {code: scalar(ws.cell(r, col).value) for col, code in codes.items()}
+    out = {key: {} for key in accepted_types.values()}
+    for row in ws.iter_rows():
+        for cell in row:
+            tipo = norm(cell.value)
+            if tipo not in accepted_types:
+                continue
+            name = ws.cell(cell.row, cell.column + 1).value
+            if blank(name):
+                continue
+            key = accepted_types[tipo]
+            out[key][str(name).strip()] = {
+                code: scalar(ws.cell(cell.row, col).value) for col, code in codes.items()
+            }
+            break
     return out
+
+
+def parse_territorios(ws):
+    return parse_block(ws, {
+        "TERRITORIO REAL": "real",
+        "TERRITORIO PROMEDIO": "promedio",
+        "DIFERENCIA TERRITORIAL": "diferencia",
+    })
 
 
 def parse_comuna(ws):
-    codes, _ = code_columns(ws)
-    out = {"real": {}, "promedio_barrios": {}}
-    for r in range(1, ws.max_row + 1):
-        tipo = norm(ws.cell(r, 2).value)
-        comuna = ws.cell(r, 3).value
-        if tipo not in {"COMUNA REAL", "COMUNA PROMEDIO BARRIOS"} or blank(comuna):
-            continue
-        key = "real" if tipo == "COMUNA REAL" else "promedio_barrios"
-        out[key][str(comuna).strip()] = {code: scalar(ws.cell(r, col).value) for col, code in codes.items()}
-    return out
+    return parse_block(ws, {
+        "COMUNA REAL": "real",
+        "COMUNA PROMEDIO BARRIOS": "promedio_barrios",
+    })
 
 
 def main():
@@ -123,7 +141,7 @@ def main():
     parser.add_argument("--out-dir", type=Path, default=Path("data"))
     args = parser.parse_args()
 
-    wb = load_workbook(args.xlsx, data_only=True, read_only=True)
+    wb = load_workbook(args.xlsx, data_only=True, read_only=False)
     stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     master_barrio = {
@@ -146,13 +164,15 @@ def main():
 
     indicator_union = []
     for year in YEARS:
+        if str(year) not in wb.sheetnames:
+            raise RuntimeError(f"Falta hoja {year}")
         ws = wb[str(year)]
         barrios, codes = parse_barrios(ws)
         if len(barrios) != EXPECTED_BARRIOS:
-            raise RuntimeError(f"Hoja {year}: se esperaban {EXPECTED_BARRIOS} barrios y se leyeron {len(barrios)}")
+            raise RuntimeError(f"Hoja {year}: esperados {EXPECTED_BARRIOS}; leídos {len(barrios)}")
         names = [b["nombre"] for b in barrios]
         if len(set(map(norm, names))) != EXPECTED_BARRIOS:
-            raise RuntimeError(f"Hoja {year}: hay nombres de barrio duplicados")
+            raise RuntimeError(f"Hoja {year}: nombres de barrio duplicados")
         indicator_union.extend(c for c in codes if c not in indicator_union)
         master_barrio["anios"][str(year)] = barrios
         master_aggregates["anios"][str(year)] = {
