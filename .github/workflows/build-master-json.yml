@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       source_path:
-        description: Ruta del XLSX maestro dentro del repositorio
+        description: Ruta del XLSX maestro dentro del repositorio o runner
         required: true
         default: data/source/BBDD_Visor_Geoindicadores_2025_2026.xlsx
 
@@ -30,23 +30,37 @@ jobs:
         run: |
           test -f "${{ inputs.source_path }}" || {
             echo "No existe ${{ inputs.source_path }}" >&2
+            echo "La BBDD Maestra no debe publicarse solo para ejecutar este flujo." >&2
+            echo "Use una fuente segura en el runner o el flujo de sincronización con Google Drive cuando esté configurado." >&2
             exit 1
           }
 
       - name: Generar JSON maestros
         run: python scripts/build_master_json.py "${{ inputs.source_path }}" --out-dir data
 
-      - name: Validar que 0 no se convierta en null
+      - name: Validar 27 barrios, ceros y nulos
         run: |
           python - <<'PY'
           import json
-          p='data/master-barrio.json'
-          d=json.load(open(p,encoding='utf-8'))
-          for year, rows in d['anios'].items():
-              assert len(rows)==27, (year, len(rows))
-              for row in rows:
-                  assert row['nombre']
-          print('OK: 27 barrios por año; ceros preservados por el generador')
+          from pathlib import Path
+
+          barrio = json.loads(Path('data/master-barrio.json').read_text(encoding='utf-8'))
+          agg = json.loads(Path('data/master-aggregates.json').read_text(encoding='utf-8'))
+
+          assert barrio['meta']['barrios_esperados'] == 27
+          for year in ('2025','2026'):
+              rows = barrio['anios'][year]
+              assert len(rows) == 27, (year, len(rows))
+              assert len({r['nombre'].strip().upper() for r in rows}) == 27
+              values = [v for r in rows for v in r['valores'].values()]
+              zeros = sum(v == 0 for v in values if isinstance(v, (int, float)) and not isinstance(v, bool))
+              nulls = sum(v is None for v in values)
+              assert zeros > 0, f'{year}: no se detectaron ceros válidos; revisar transformación'
+              assert nulls > 0, f'{year}: no se detectaron nulos; revisar transformación'
+              terr = agg['anios'][year]['territorio']
+              assert len(terr['real']) == 6, (year, 'territorio real', len(terr['real']))
+              assert len(terr['promedio']) == 6, (year, 'territorio promedio', len(terr['promedio']))
+              print(f'OK {year}: 27 barrios · {zeros} ceros válidos · {nulls} nulos')
           PY
 
       - name: Commit de JSON derivados
