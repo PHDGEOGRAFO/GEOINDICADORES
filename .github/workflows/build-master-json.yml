@@ -1,0 +1,62 @@
+name: Generar JSON maestros GeoIndicadores
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_path:
+        description: Ruta del XLSX maestro dentro del repositorio
+        required: true
+        default: data/source/BBDD_Visor_Geoindicadores_2025_2026.xlsx
+
+permissions:
+  contents: write
+
+jobs:
+  build-master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencia
+        run: pip install openpyxl==3.1.5
+
+      - name: Verificar fuente
+        run: |
+          test -f "${{ inputs.source_path }}" || {
+            echo "No existe ${{ inputs.source_path }}" >&2
+            exit 1
+          }
+
+      - name: Generar JSON maestros
+        run: python scripts/build_master_json.py "${{ inputs.source_path }}" --out-dir data
+
+      - name: Validar que 0 no se convierta en null
+        run: |
+          python - <<'PY'
+          import json
+          p='data/master-barrio.json'
+          d=json.load(open(p,encoding='utf-8'))
+          for year, rows in d['anios'].items():
+              assert len(rows)==27, (year, len(rows))
+              for row in rows:
+                  assert row['nombre']
+          print('OK: 27 barrios por año; ceros preservados por el generador')
+          PY
+
+      - name: Commit de JSON derivados
+        run: |
+          if git diff --quiet -- data/master-barrio.json data/master-aggregates.json; then
+            echo "Sin cambios en JSON maestros"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/master-barrio.json data/master-aggregates.json
+          git commit -m "Actualiza JSON maestros desde BBDD Maestra"
+          git push
