@@ -1,0 +1,33 @@
+{
+  "module_id": "geoindicadores",
+  "name": "GeoIndicadores PLADECO 2024-2034",
+  "status": "ready_for_gis_stgo",
+  "source_repository": "PHDGEOGRAFO/GEOINDICADORES",
+  "entrypoint": "index.html",
+  "public_module": true,
+  "integration": {
+    "shell": "GIS STGO",
+    "core": ["GIS CORE", "DATA CORE", "SANTI_A"],
+    "data_sources": ["data/master-barrio.json", "data/master-aggregates.json"],
+    "scales": ["barrio", "territorio", "comuna"],
+    "temporarily_disabled_scales": ["manzana"],
+    "shared_capabilities": ["mapa", "seleccion-territorial", "comparacion-temporal", "metadatos", "ficha-metodologica", "analisis"]
+  },
+  "methodology": {
+    "valid_neighbourhoods": 27,
+    "zero_is_valid_data": true,
+    "missing_is_null": true,
+    "ranges": [
+      {"min": 0.0, "max_exclusive": 0.125, "name": "MUY BAJO"},
+      {"min": 0.125, "max_exclusive": 0.375, "name": "BAJO"},
+      {"min": 0.375, "max_exclusive": 0.75, "name": "MEDIO"},
+      {"min": 0.75, "max_exclusive": 0.875, "name": "ALTO"},
+      {"min": 0.875, "max_inclusive": 1.0, "name": "MUY ALTO"}
+    ]
+  },
+  "migration": {
+    "mode": "complete",
+    "central_repository_pending": true,
+    "note": "El módulo queda preparado para montaje directo cuando exista el repositorio/contenedor central GIS STGO."
+  }
+}
