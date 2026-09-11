@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Piloto Turf.js · GeoIndicadores</title></head>
+<body>
+<h1>Piloto Turf.js · GeoIndicadores</h1>
+<pre id="out">Cargando…</pre>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+<script>
+(async()=>{
+  const out=document.getElementById('out');
+  try{
+    const [barrios,territorios]=await Promise.all([
+      fetch('../data/barrios.geojson').then(r=>r.json()),
+      fetch('../data/territorios.geojson').then(r=>r.json())
+    ]);
+    const barrio=barrios.features[0];
+    const centro=turf.centerOfMass(barrio);
+    const area=turf.area(barrio);
+    const territorio=territorios.features.find(t=>turf.booleanPointInPolygon(centro,t));
+    out.textContent=JSON.stringify({
+      ok:true,
+      turfVersion:'7.x',
+      prueba:'centerOfMass + area + booleanPointInPolygon',
+      barrio:barrio.properties.BARRIO,
+      area_m2:Math.round(area),
+      centro:centro.geometry.coordinates,
+      territorio:territorio?.properties?.TERRITORIO??null
+    },null,2);
+  }catch(error){out.textContent='ERROR\n'+(error.stack||error.message||error)}
+})();
+</script>
+</body></html>
