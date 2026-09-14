@@ -1,0 +1,7 @@
+{
+  "version": "0.6.33",
+  "mode": "preview_client_gate",
+  "session_key": "gis_stgo_library_access",
+  "password_sha256": "772bc9775c223606c638636e81b7982fb792c164a592e37d1eceeb91a32ac1f2",
+  "security_note": "Control de previsualización estática. No sustituye autenticación de servidor para producción."
+}
