@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "source": "2. BIBLIOTECA DIGITAL",
+  "masterRule": "Los archivos maestros permanecen en la unidad oficial; este catálogo solo registra espacios y referencias verificadas.",
+  "categories": [
+    {"id":"manuales","name":"Manuales de uso y operación","description":"Guías operativas de los módulos de la plataforma.","status":"ready","documents":[]},
+    {"id":"metodologia","name":"Documentos metodológicos","description":"Definiciones, cálculos, escalas, indicadores y criterios de validación.","status":"ready","documents":[]},
+    {"id":"arquitectura","name":"Memorias y arquitectura","description":"Arquitectura GIS CORE, DATA CORE, SANTI_A y decisiones técnicas.","status":"ready","documents":[]},
+    {"id":"respaldos","name":"Respaldos técnicos","description":"Paquetes versionados, informes de control y evidencia de pruebas.","status":"ready","documents":[]},
+    {"id":"cambios","name":"Control de cambios","description":"Versiones, decisiones, responsables y efectos sobre producción.","status":"ready","documents":[]},
+    {"id":"replicacion","name":"Documentación para replicación","description":"Pasos para reconstruir, validar y desplegar la plataforma.","status":"ready","documents":[]}
+  ],
+  "moduleStatus":"migrated_to_gis_stgo",
+  "documentLoadStatus":"pending_official_references",
+  "operationalRepository":"PHDGEOGRAFO/VISOR-REPOSITORIO-DIGITAL",
+  "publicationRule":"El repositorio contiene copias preparadas para publicación; los originales permanecen en la Biblioteca Digital."
+}
