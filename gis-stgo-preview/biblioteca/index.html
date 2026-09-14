@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Biblioteca Digital · paralelo</title>
+  <link rel="stylesheet" href="../module.css" />
+<script>(async()=>{try{const c=await fetch('access-control.json',{cache:'no-store'}).then(r=>r.json());if(sessionStorage.getItem(c.session_key)!=='granted')location.replace('access.html')}catch(e){location.replace('access.html')}})();</script></head>
+<body><main>
+  <span class="eyebrow">Módulo paralelo · DATA CORE</span>
+  <h1>Biblioteca Digital</h1>
+  <p class="lead">Índice documental preparado para buscar y organizar referencias. La unidad <strong>2. BIBLIOTECA DIGITAL</strong> continúa como fuente maestra, sin duplicar documentos.</p>
+  <div id="status" class="notice">Cargando catálogo documental…</div>
+  <section class="panel" style="margin-top:16px">
+    <label for="search">Buscar por categoría, descripción o estado
+      <input id="search" type="search" placeholder="Ej.: metodología, manual, respaldo" />
+    </label>
+  </section>
+  <section id="categories" class="grid" aria-live="polite"></section>
+  <section class="panel" style="margin-top:16px"><h2>Regla de conservación</h2><p class="muted">La interfaz registra referencias verificadas. No mueve, reemplaza ni publica los documentos maestros.</p></section>
+  <a class="back" href="../">← Volver al INDEX</a>
+  <script src="app.js"></script>
+</main></body></html>
