@@ -1,0 +1,47 @@
+{
+  "platform": "GIS STGO",
+  "version": "0.6.39",
+  "status": "TRANSICION_CONTROLADA",
+  "policy": {
+    "master_data_location": "Unidad Compartida / Drive privado",
+    "public_repository_role": "codigo y derivados web autorizados",
+    "browser_rule": "todo archivo enviado al navegador debe considerarse descargable",
+    "canonical_web_repository": "PHDGEOGRAFO/GEOINDICADORES"
+  },
+  "gis_core": {
+    "hierarchy": ["COMUNA", "TERRITORIO_PLADECO", "BARRIO", "MANZANA_CENSAL_2024"],
+    "block_key": "COD_MZN",
+    "crs": "EPSG:4326",
+    "canonical_layers": {
+      "comuna": "../../data/comuna.geojson",
+      "barrios": "../../data/barrios.geojson",
+      "territorios": "../../data/limite_territorios_pladeco.geojson",
+      "manzanas": {
+        "NORORIENTE": "../../data/manzanas/NORORIENTE.geojson",
+        "NORPONIENTE": "../../data/manzanas/NORPONIENTE.geojson",
+        "CENTRO_ORIENTE": "../../data/manzanas/CENTRO_ORIENTE.geojson",
+        "CENTRO_PONIENTE": "../../data/manzanas/CENTRO_PONIENTE.geojson",
+        "SURORIENTE": "../../data/manzanas/SURORIENTE.geojson",
+        "SURPONIENTE": "../../data/manzanas/SURPONIENTE.geojson"
+      }
+    }
+  },
+  "data_core": {
+    "standard_publication_path": "data-web/",
+    "legacy_paths_allowed_during_transition": true,
+    "blocked_master_formats": ["xlsx", "xls", "xlsm", "gpkg", "shp", "sqlite", "sqlite3", "qgz", "qgs"],
+    "census_block_public_fields": ["COD_MZN", "BARRIO", "TERRITORIO", "COMUNA", "n_per", "geometry"]
+  },
+  "modules": {
+    "geoindicadores": "ADHERIDO",
+    "visor_territorial_biblioteca": "ADHERIDO_PARCIAL",
+    "maqueta_3d": "ADHERIDO",
+    "visor_suelos_propiedades": "ALINEACION_EN_PROCESO"
+  },
+  "pending": [
+    "revisar coberturas tematicas publicadas cobertura por cobertura",
+    "reducir atributos no necesarios",
+    "migrar progresivamente rutas historicas a data-web sin romper visores",
+    "retirar archivos completos que no requieran exposicion publica"
+  ]
+}
