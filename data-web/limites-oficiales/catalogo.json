@@ -1,0 +1,34 @@
+{
+  "estandar": "GIS-STGO-LIMITES-OFICIALES",
+  "version": "2026-09-15",
+  "crs": "EPSG:4326",
+  "estado": "OFICIAL_GIS_STGO",
+  "regla": "Estas capas son la referencia territorial comun para los visores GIS STGO. No crear copias geometricas alternativas sin control de version.",
+  "capas": {
+    "comuna": {
+      "nombre": "Comuna de Santiago",
+      "ruta_canonica": "data/comuna.geojson",
+      "url_canonica": "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/comuna.geojson",
+      "campo_nombre": "COMUNA",
+      "campo_codigo": "CUT_COM"
+    },
+    "barrios": {
+      "nombre": "Barrios oficiales de Santiago",
+      "ruta_canonica": "data/barrios.geojson",
+      "url_canonica": "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/barrios.geojson",
+      "campo_nombre": "BARRIO",
+      "campo_territorio": "TERRITORIO",
+      "campo_comuna": "COMUNA"
+    },
+    "territorios": {
+      "nombre": "Territorios PLADECO",
+      "ruta_canonica": "data/limite_territorios_pladeco.geojson",
+      "url_canonica": "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/limite_territorios_pladeco.geojson",
+      "campo_nombre": "SECTORES_T"
+    }
+  },
+  "nombres_controlados": {
+    "barrios_clave": ["REPÚBLICA", "RONDIZZONI", "PARQUE O'HIGGINS"],
+    "territorios": ["NORORIENTE", "NORPONIENTE", "CENTRO ORIENTE", "CENTRO PONIENTE", "SURORIENTE", "SURPONIENTE"]
+  }
+}
