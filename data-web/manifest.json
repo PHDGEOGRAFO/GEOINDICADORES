@@ -1,0 +1,17 @@
+{
+  "proyecto": "GEOINDICADORES",
+  "estado": "transicion",
+  "fuente_maestra": "Unidad Compartida / BBDD Maestra",
+  "ruta_publicacion_objetivo": "data-web/",
+  "regla": "publicar solo datos derivados necesarios para visualizacion",
+  "campos_publicables_referencia": [
+    "id_publico",
+    "unidad_territorial",
+    "anio",
+    "indicador",
+    "valor_final",
+    "rango",
+    "categoria",
+    "geometria"
+  ]
+}
