@@ -25,8 +25,33 @@
       "ruta_canonica": "data/limite_territorios_pladeco.geojson",
       "url_canonica": "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/limite_territorios_pladeco.geojson",
       "campo_nombre": "SECTORES_T"
+    },
+    "manzana": {
+      "nombre": "Manzana Censal 2024",
+      "anio": 2024,
+      "campo_codigo": "COD_MZN",
+      "campo_barrio": "BARRIO",
+      "campo_territorio": "TERRITORIO",
+      "campo_comuna": "COMUNA",
+      "rutas_canonicas": [
+        "data/manzanas/NORPONIENTE.geojson",
+        "data/manzanas/SURPONIENTE.geojson",
+        "data/manzanas/NORORIENTE.geojson",
+        "data/manzanas/CENTRO_ORIENTE.geojson",
+        "data/manzanas/CENTRO_PONIENTE.geojson",
+        "data/manzanas/SURORIENTE.geojson"
+      ],
+      "urls_canonicas": [
+        "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/manzanas/NORPONIENTE.geojson",
+        "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/manzanas/SURPONIENTE.geojson",
+        "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/manzanas/NORORIENTE.geojson",
+        "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/manzanas/CENTRO_ORIENTE.geojson",
+        "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/manzanas/CENTRO_PONIENTE.geojson",
+        "https://raw.githubusercontent.com/PHDGEOGRAFO/GEOINDICADORES/main/data/manzanas/SURORIENTE.geojson"
+      ]
     }
   },
+  "jerarquia_territorial": ["COMUNA", "TERRITORIO", "BARRIO", "MANZANA_CENSAL_2024"],
   "nombres_controlados": {
     "barrios_clave": ["REPÚBLICA", "RONDIZZONI", "PARQUE O'HIGGINS"],
     "territorios": ["NORORIENTE", "NORPONIENTE", "CENTRO ORIENTE", "CENTRO PONIENTE", "SURORIENTE", "SURPONIENTE"]
