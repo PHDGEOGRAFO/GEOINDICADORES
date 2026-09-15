@@ -1,17 +1,15 @@
 {
-  "version": "0.2.0",
-  "source": "2. BIBLIOTECA DIGITAL",
-  "masterRule": "Los archivos maestros permanecen en la unidad oficial; este catálogo solo registra espacios y referencias verificadas.",
-  "categories": [
-    {"id":"manuales","name":"Manuales de uso y operación","description":"Guías operativas de los módulos de la plataforma.","status":"ready","documents":[]},
-    {"id":"metodologia","name":"Documentos metodológicos","description":"Definiciones, cálculos, escalas, indicadores y criterios de validación.","status":"ready","documents":[]},
-    {"id":"arquitectura","name":"Memorias y arquitectura","description":"Arquitectura GIS CORE, DATA CORE, SANTI_A y decisiones técnicas.","status":"ready","documents":[]},
-    {"id":"respaldos","name":"Respaldos técnicos","description":"Paquetes versionados, informes de control y evidencia de pruebas.","status":"ready","documents":[]},
-    {"id":"cambios","name":"Control de cambios","description":"Versiones, decisiones, responsables y efectos sobre producción.","status":"ready","documents":[]},
-    {"id":"replicacion","name":"Documentación para replicación","description":"Pasos para reconstruir, validar y desplegar la plataforma.","status":"ready","documents":[]}
+  "version":"0.3.0",
+  "source":"Biblioteca Digital Territorial / copias web derivadas",
+  "masterRule":"Los GeoPackage maestros permanecen en la unidad oficial. Los enlaces del catálogo apuntan a copias publicadas para consulta/descarga.",
+  "categories":[
+    {"id":"base","name":"Base Territorial","code":"00","description":"Límites y estructura territorial de referencia.","file":"00_BASE_TERRITORIAL_VF.gpkg","size_mb":4.0},
+    {"id":"urb","name":"Dimensión Urbana","code":"URB","description":"Coberturas urbanas consolidadas.","file":"01_DIM_URBANA_VF.gpkg","size_mb":82.4},
+    {"id":"amb","name":"Dimensión Ambiental","code":"AMB","description":"Coberturas ambientales consolidadas.","file":"02_DIM_AMBIENTAL_VF.gpkg","size_mb":47.5},
+    {"id":"soc","name":"Dimensión Sociocultural","code":"SOC","description":"Coberturas sociales y socioculturales consolidadas.","file":"03_DIM_SOCIOCULTURAL_VF.gpkg","size_mb":11.4},
+    {"id":"eco","name":"Dimensión Económica","code":"ECO","description":"Coberturas económicas consolidadas.","file":"04_DIM_ECONOMICA_VF.gpkg","size_mb":43.4},
+    {"id":"ins","name":"Dimensión Institucional","code":"INS","description":"Coberturas institucionales consolidadas.","file":"05_DIM_INSTITUCIONAL_VF.gpkg","size_mb":0.5}
   ],
-  "moduleStatus":"migrated_to_gis_stgo",
-  "documentLoadStatus":"pending_official_references",
-  "operationalRepository":"PHDGEOGRAFO/VISOR-REPOSITORIO-DIGITAL",
-  "publicationRule":"El repositorio contiene copias preparadas para publicación; los originales permanecen en la Biblioteca Digital."
+  "downloadBase":"https://raw.githubusercontent.com/PHDGEOGRAFO/VISOR-REPOSITORIO-DIGITAL/main/public/data/gpkg/",
+  "publicationRule":"Catálogo de prueba: no sustituye la Biblioteca Digital Territorial maestra en Drive."
 }
