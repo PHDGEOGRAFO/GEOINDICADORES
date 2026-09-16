@@ -59,7 +59,7 @@ jobs:
                 BAD=1
               fi
 
-              if grep -IEnq '-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{30,}' "$f" 2>/dev/null; then
+              if grep -IEnq -- '-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{30,}' "$f" 2>/dev/null; then
                 echo "ERROR: posible credencial o clave detectada en $f"
                 BAD=1
               fi
