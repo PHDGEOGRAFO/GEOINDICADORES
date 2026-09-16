@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GIS STGO · OAuth Callback</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#0f172a;color:#e2e8f0;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;padding:24px}
+    .card{max-width:620px;background:#111827;border:1px solid #334155;border-radius:16px;padding:28px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+    h1{font-size:22px;margin:0 0 12px}.muted{color:#94a3b8;line-height:1.55}.ok{color:#86efac}.err{color:#fca5a5}code{word-break:break-all;background:#0b1220;padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>GIS STGO · Conexión Mercado Inmobiliario</h1>
+    <p id="status" class="muted">Procesando autorización…</p>
+    <p class="muted">Esta página no almacena credenciales. Solo reenvía el código temporal de autorización al conector local del Visor de Suelos.</p>
+  </div>
+  <script>
+    (function(){
+      const status = document.getElementById('status');
+      const params = new URLSearchParams(location.search);
+      const code = params.get('code');
+      const state = params.get('state');
+      const error = params.get('error');
+      const errorDesc = params.get('error_description');
+
+      if (error) {
+        status.className = 'err';
+        status.textContent = 'Mercado Libre devolvió un error: ' + error + (errorDesc ? ' — ' + errorDesc : '');
+        return;
+      }
+      if (!code) {
+        status.className = 'err';
+        status.textContent = 'No se recibió un código de autorización.';
+        return;
+      }
+
+      const target = new URL('http://127.0.0.1:8787/oauth/callback');
+      target.searchParams.set('code', code);
+      if (state) target.searchParams.set('state', state);
+
+      status.className = 'ok';
+      status.textContent = 'Autorización recibida. Redirigiendo al conector local…';
+      setTimeout(() => { location.replace(target.toString()); }, 500);
+    })();
+  </script>
+</body>
+</html>
