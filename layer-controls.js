@@ -136,7 +136,7 @@
     if(document.getElementById('gi-layer-box'))return;
     try{
       const [barrios,territorios,comuna]=await Promise.all([
-        fetch('data/limite_barrios.geojson?v=0.9.10').then(r=>r.json()),
+        fetch('data/limite_barrios.geojson?v=0.9.11').then(r=>r.json()),
         fetch('data/limite_territorios_pladeco.geojson?v=0.9.10').then(r=>r.json()),
         fetch('data/limite_comuna.geojson?v=0.9.10').then(r=>r.json())
       ]);
